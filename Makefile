@@ -24,4 +24,3 @@ quickstart-build:
 
 echo:
 	echo Hello from zato-docker
-	# $(MAKE) install-qa-reqs
