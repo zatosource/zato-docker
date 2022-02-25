@@ -4,7 +4,7 @@ FROM ubuntu:focal
 RUN apt-get update && \
     apt-get -y install python3 python3-nacl python3-pip libffi-dev sudo
 
-# Install Aansible
+# Install Ansible
 RUN pip3 install ansible
 
 # Copy the base Ansible playbook for use inside the container
