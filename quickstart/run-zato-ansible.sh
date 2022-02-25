@@ -5,9 +5,6 @@
 import os
 from json import dumps
 
-# sh
-import sh
-
 # The list of environment variables that we recognize
 # and that can be passed to the underlying Ansible playbook.
 env_keys = [
@@ -73,19 +70,26 @@ for prev_name, current_name in env_keys_prev.items():
 # ZATO_ENMASSE_INITIAL_SLEEP
 #
 
+# Optionally, make Ansible output in a verbose mode
+if os.environ.get('ZATO_ANSIBLE_VERBOSE'):
+    ansible_verbosity = '-vv'
+else:
+    ansible_verbosity = ''
+
 # Turn the dictionary of parameters into a JSON document expected by Ansible.
 env_values = dumps(env_values)
 
 # Build a list of Ansible parameters to invoke via sh
 cli_params = []
+cli_params.append('ansible-playbook')
 cli_params.append('-c')
 cli_params.append('local')
 cli_params.append('-i')
 cli_params.append('localhost,')
 cli_params.append('/zato-ansible/zato-quickstart.yaml')
-cli_params.append('-v')
+cli_params.append(ansible_verbosity)
 cli_params.append('--extra-vars')
-cli_params.append(env_values)
+cli_params.append(f"'{env_values}'")
 cli_params.append('&&')
 cli_params.append('tail')
 cli_params.append('-n')
@@ -93,14 +97,18 @@ cli_params.append('500')
 cli_params.append('-f')
 cli_params.append('/opt/zato/env/qs-1/server1/logs/server.log')
 
-# Invoke Ansible now
-command = sh('ansible-playbook')
-command(*cli_params)
+# Build a full command
+command = ' '.join(cli_params)
+
+# And write it to a file that will be invoked
+f = open('run-zato-ansible-impl.sh', 'w')
+f.write('#!/bin/bash')
+f.write('\n')
+f.write(command)
+f.write('\n')
+f.close()
 
 IN_PYTHON
 
-#ansible-playbook -c local -i localhost, /zato-ansible/zato-quickstart.yaml -v \
-#    --extra-vars '{"Zato_Run_Quickstart_Step_02":true}' && \
-
-# Tail server logs in foreground
-#tail -n 500 -f /opt/zato/env/qs-1/server1/logs/server.log
+# Run the commands now
+bash run-zato-ansible-impl.sh
