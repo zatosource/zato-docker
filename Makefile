@@ -17,7 +17,7 @@ parent-build:
 	docker tag zato-$(ZATO_VERSION)-quickstart-parent:latest ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart-parent:latest
 	cd $(CURDIR)
 
-parent-upload:
+parent-push:
 	$(MAKE) parent-build
 	echo $(ZATO_GHCR_TOKEN) | docker login ghcr.io -u $(ZATO_GHCR_USER) --password-stdin
 	docker push ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart-parent:latest
@@ -27,9 +27,10 @@ quickstart-build:
 	cp $(ZATO_ANSIBLE_DIR)/* $(QUICKSTART_IMAGE_DIR)
 	cd $(QUICKSTART_IMAGE_DIR)
 	docker build -t zato-$(ZATO_VERSION)-quickstart $(QUICKSTART_IMAGE_DIR)
+	docker tag zato-$(ZATO_VERSION)-quickstart:latest ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart:latest
 	cd $(CURDIR)
 
-quickstart-upload:
+quickstart-push:
 	$(MAKE) quickstart-build
 	echo $(ZATO_GHCR_TOKEN) | docker login ghcr.io -u $(ZATO_GHCR_USER) --password-stdin
 	docker push ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart:latest
