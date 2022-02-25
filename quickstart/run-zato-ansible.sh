@@ -71,7 +71,7 @@ for prev_name, current_name in env_keys_prev.items():
 #
 
 # Optionally, make Ansible output in a verbose mode
-ansible_verbosity = os.environ.get('Zato_Ansible_Verbosity') or ''
+build_verbosity = os.environ.get('Zato_Build_Verbosity') or ''
 
 # Turn the dictionary of parameters into a JSON document expected by Ansible.
 env_values = dumps(env_values)
@@ -84,7 +84,7 @@ cli_params.append('local')
 cli_params.append('-i')
 cli_params.append('localhost,')
 cli_params.append('/zato-ansible/zato-quickstart.yaml')
-cli_params.append(ansible_verbosity)
+cli_params.append(build_verbosity)
 cli_params.append('--extra-vars')
 cli_params.append(f"'{env_values}'")
 cli_params.append('&&')
@@ -98,7 +98,7 @@ cli_params.append('/opt/zato/env/qs-1/server1/logs/server.log')
 command = ' '.join(cli_params)
 
 # And write it to a file that will be invoked
-f = open('run-zato-ansible-impl.sh', 'w')
+f = open('/zato-ansible/run-zato-ansible-impl.sh', 'w')
 f.write('#!/bin/bash')
 f.write('\n')
 f.write(command)
@@ -108,4 +108,4 @@ f.close()
 IN_PYTHON
 
 # Run the commands now
-bash run-zato-ansible-impl.sh
+bash /zato-ansible/run-zato-ansible-impl.sh
