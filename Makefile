@@ -19,7 +19,7 @@ git-sync:
 	git pull
 
 parent-build:
-	cp $(ZATO_ANSIBLE_DIR)/* $(PARENT_IMAGE_DIR)
+	cp $(ZATO_ANSIBLE_QS_DIR)/* $(PARENT_IMAGE_DIR)
 	cd $(PARENT_IMAGE_DIR)
 	docker build -t zato-$(ZATO_VERSION)-quickstart-parent $(PARENT_IMAGE_DIR)
 	docker tag zato-$(ZATO_VERSION)-quickstart-parent:latest ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart-parent:latest
@@ -32,7 +32,7 @@ parent-push:
 	cd $(CURDIR)
 
 quickstart-build:
-	cp $(ZATO_ANSIBLE_DIR)/* $(QUICKSTART_IMAGE_DIR)
+	cp $(ZATO_ANSIBLE_QS_DIR)/* $(QUICKSTART_IMAGE_DIR)
 	cd $(QUICKSTART_IMAGE_DIR)
 	docker build -t zato-$(ZATO_VERSION)-quickstart $(QUICKSTART_IMAGE_DIR)
 	docker tag zato-$(ZATO_VERSION)-quickstart:latest ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart:latest
