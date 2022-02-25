@@ -6,9 +6,17 @@ default: echo
 
 ZATO_VERSION=3.2
 
-ZATO_ANSIBLE_DIR=$(CURDIR)/zato-ansible/quickstart
+ZATO_ANSIBLE_DIR=$(CURDIR)/zato-ansible
+ZATO_ANSIBLE_QS_DIR=$(ZATO_ANSIBLE_DIR)/quickstart
+
 PARENT_IMAGE_DIR=$(CURDIR)/parent
 QUICKSTART_IMAGE_DIR=$(CURDIR)/quickstart
+
+git-sync:
+	git submodule update --init --recursive
+	cd $(ZATO_ANSIBLE_DIR)
+	git checkout main
+	git pull
 
 parent-build:
 	cp $(ZATO_ANSIBLE_DIR)/* $(PARENT_IMAGE_DIR)
