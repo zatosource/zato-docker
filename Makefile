@@ -33,6 +33,5 @@ quickstart-upload:
     echo $(ZATO_GHCR_TOKEN) | docker login ghcr.io -u $(ZATO_GHCR_USER) --password-stdin
     docker push ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart:latest
 
-
 echo:
 	echo Hello from zato-docker
