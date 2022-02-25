@@ -14,5 +14,8 @@ COPY zato-quickstart-01.yaml /zato-ansible/zato-quickstart-01.yaml
 COPY zato-quickstart-02.yaml /zato-ansible/zato-quickstart-02.yaml
 COPY run-zato-ansible.sh     /zato-ansible/run-zato-ansible.sh
 
+# Signal to Ansible that it should provision a new environment
+ENV Zato_Run_Quickstart_Step_02=true
+
 # Run Ansible provisioning when we start up (step 02)
 ENTRYPOINT ["/zato-ansible/run-zato-ansible.sh"]
