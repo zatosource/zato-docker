@@ -44,5 +44,10 @@ quickstart-push:
 	docker push ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart:latest
 	cd $(CURDIR)
 
+all-push:
+	$(MAKE) git-sync
+	$(MAKE) parent-push
+	$(MAKE) quickstart-push
+
 echo:
 	echo Hello from zato-docker
