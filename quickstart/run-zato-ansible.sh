@@ -71,10 +71,7 @@ for prev_name, current_name in env_keys_prev.items():
 #
 
 # Optionally, make Ansible output in a verbose mode
-if os.environ.get('ZATO_ANSIBLE_VERBOSE'):
-    ansible_verbosity = '-vv'
-else:
-    ansible_verbosity = ''
+ansible_verbosity = os.environ.get('ZATO_ANSIBLE_VERBOSITY') or ''
 
 # Turn the dictionary of parameters into a JSON document expected by Ansible.
 env_values = dumps(env_values)
