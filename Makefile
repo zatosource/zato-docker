@@ -30,10 +30,13 @@ parent-build:
 	cd $(CURDIR)
 
 parent-push:
-	$(MAKE) parent-build
 	echo $(ZATO_GHCR_TOKEN) | docker login ghcr.io -u $(ZATO_GHCR_USER) --password-stdin
 	docker push ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart-parent:latest
 	cd $(CURDIR)
+
+parent-all:
+	$(MAKE) parent-build
+	$(MAKE) parent-push
 
 quickstart-build:
 	cp $(ZATO_ANSIBLE_QS_DIR)/* $(QUICKSTART_IMAGE_DIR)
@@ -43,15 +46,18 @@ quickstart-build:
 	cd $(CURDIR)
 
 quickstart-push:
-	$(MAKE) quickstart-build
 	echo $(ZATO_GHCR_TOKEN) | docker login ghcr.io -u $(ZATO_GHCR_USER) --password-stdin
 	docker push ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart:latest
 	cd $(CURDIR)
 
-all-push:
-	$(MAKE) git-sync
-	$(MAKE) parent-push
+quickstart-all:
+	$(MAKE) quickstart-build
 	$(MAKE) quickstart-push
+
+all-build-push:
+	$(MAKE) git-sync
+	$(MAKE) parent-all
+	$(MAKE) quickstart-all
 
 echo:
 	echo Hello from zato-docker
