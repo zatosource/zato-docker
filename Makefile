@@ -13,8 +13,8 @@ PARENT_IMAGE_DIR=$(CURDIR)/parent
 QUICKSTART_IMAGE_DIR=$(CURDIR)/quickstart
 
 git-sync:
-	git submodule update --init --recursive
 	cd $(ZATO_ANSIBLE_DIR)
+	git submodule update --init --recursive
 	git checkout main
 	git pull
 	cd ..
