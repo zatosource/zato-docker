@@ -13,7 +13,12 @@ PARENT_IMAGE_DIR=$(CURDIR)/parent
 QUICKSTART_IMAGE_DIR=$(CURDIR)/quickstart
 
 git-sync:
-	git submodule foreach git pull
+	cd $(ZATO_ANSIBLE_DIR)
+	git submodule update --init --recursive
+	git checkout main
+	git pull
+	cd ..
+	git add .
 	git commit -m "GH #1 - Pulling latest changes from zato-ansible." || true
 	git push || true
 
