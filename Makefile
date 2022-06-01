@@ -50,7 +50,6 @@ quickstart-all:
 	$(MAKE) quickstart-push
 
 all-build-push:
-	$(MAKE) git-sync
 	$(MAKE) parent-all
 	$(MAKE) quickstart-all
 
