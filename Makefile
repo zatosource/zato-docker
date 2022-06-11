@@ -16,7 +16,11 @@ git-sync:
 	cd $(ZATO_ANSIBLE_DIR)
 	git submodule update --init --recursive
 	git checkout main
-	git pull
+	cd ..
+	git add .
+	git add zato-ansible
+	git commit -m "GH #1 - Pulling latest changes from zato-ansible." || true
+	git push || true
 
 parent-build:
 	cp $(ZATO_ANSIBLE_QS_DIR)/* $(PARENT_IMAGE_DIR)
