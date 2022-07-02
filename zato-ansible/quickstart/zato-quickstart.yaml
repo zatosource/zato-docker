@@ -1,0 +1,122 @@
+---
+- hosts: all
+  become: yes
+
+  vars:
+
+    pg_version: "14"
+    zato_version: "3.2"
+    zato_tests_base_dir: "~/{{ zato_version }}.0"
+
+    zato_env_path: "/opt/zato/env/qs-1"
+
+    zato_db_main: "zato_db_main1"
+    zato_db_pubsub: "zato_db_pubsub1"
+
+    zato_db_username_main: "zato_user_main1"
+    zato_db_username_pubsub: "zato_user_pubsub1"
+
+    pg_conf_path: "/etc/postgresql/{{ pg_version }}/main/postgresql.conf"
+    pg_hba_conf_path: "/etc/postgresql/{{ pg_version }}/main/pg_hba.conf"
+
+    zato_python_reqs_opt: "/opt/hot-deploy/python-reqs/requirements.txt"
+    zato_python_reqs_tmp: "/tmp/zato-user-reqs/requirements.txt"
+
+    zato_ssh_user_password_file: /opt/zato/env/details/zato-ssh-user-password.txt
+    zato_ide_publisher_password_file: /opt/zato/env/details/zato-ide-publisher-password.txt
+    zato_dashboard_admin_password_file: /opt/zato/env/details/zato-dashboard-admin-password.txt
+
+    zato_db_password_main_file: /opt/zato/env/details/zato-db-user-main-password.txt
+    zato_db_password_pubsub_file: /opt/zato/env/details/zato-db-user-pubsub-password.txt
+
+    zato_ssh_user_password: "{{ 'zato.ssh.' + lookup('password', '/dev/null chars=ascii_lowercase,digits length=20') }}"
+    zato_ide_publisher_password: "{{ 'zato.ide.' + lookup('password', '/dev/null chars=ascii_lowercase,digits length=20') }}"
+    zato_dashboard_admin_password: "{{ 'zato.dash.' + lookup('password', '/dev/null chars=ascii_lowercase,digits length=20') }}"
+    zato_db_password_main: "{{ 'zato.db.main.' + lookup('password', '/dev/null chars=ascii_lowercase,digits length=20') }}"
+    zato_db_password_pubsub: "{{ 'zato.db.ps.' + lookup('password', '/dev/null chars=ascii_lowercase,digits length=20') }}"
+    zato_hashicorp_vault_token: "{{ 'zatotoken' + lookup('password', '/dev/null chars=ascii_lowercase,digits length=20') }}"
+
+    zato_async_timeout: "{{ 3600 * 24 * 365 * 100 }}" # 1 hour (in seconds) * 24 hours * 365 days * 100 years
+    zato_start_preamble: |
+        export PATH=$PATH:~/current/bin
+        export PYTHONPATH=$PYTHONPATH:/opt/zato/current/extlib
+        export ZATO_PYTHON_REQS={{ zato_python_reqs }}
+        export ZATO_HOT_DEPLOY_DIR=/opt/hot-deploy/services
+        export ZATO_USER_CONF_DIR=/opt/hot-deploy/user-conf:/tmp/zato-user-conf
+        export ZATO_HOT_DEPLOY_PREFER_SNAPSHOTS={{ zato_hot_deploy_prefer_snapshots }}
+
+    zato_run_internal_tests: "{{ Zato_Run_Internal_Tests | default(False) }}"
+    zato_has_python_reqs_in_tmp: "{{ Zato_Has_Python_Reqs_In_Tmp | default(False) }}"
+    zato_firewall_limit_to_local_connections: "{{ Zato_Firewall_Limit_To_Local_Connections | default(False) }}"
+
+    zato_qs_run_01: "{{ Zato_Run_Quickstart_Step_01 | default(False) }}"
+    zato_qs_run_02: "{{ Zato_Run_Quickstart_Step_02 | default(False) }}"
+
+    zato_use_mysql: "{{ Zato_Use_MySQL | default(True) }}"
+    zato_use_postgresql: "{{ Zato_Use_PostgreSQL | default(True) }}"
+
+    zato_install_playwright: "{{ Zato_Install_Playwright | default(False) }}"
+
+    zato_ext_lib_dir: "{{ Zato_Extlib_Dir | default(False) }}"
+    zato_map_ssh_dir: "{{ Zato_Map_SSH_Dir | default(False) }}"
+    zato_install_binaries: "{{ Zato_Install_Binaries | default(True) }}"
+    zato_use_hashicorp_vault: "{{ Zato_Use_Hashicorp_Vault | default(False) }}"
+    zato_enable_redis: "{{ Zato_Use_Hashicorp_Vault | default(True) }}"
+    zato_pre_enmasse_script: "{{ Zato_Pre_Enmasse_Script | default(False) }}"
+    zato_post_install_script: "{{ Zato_Post_Install_Script | default(False) }}"
+    zato_env_file: "{{ Zato_Env_File | default('/env-file-does-not-exist') }}"
+
+    environment_config:
+
+      zato_env_path: "{{ zato_env_path }}"
+
+      zato_ssh_username: "zato"
+      zato_ssh_password: "{{ zato_ssh_user_password }}"
+
+      zato_ide_publisher_username: "ide_publisher"
+      zato_ide_publisher_password: "{{ zato_ide_publisher_password }}"
+
+      zato_dashboard_admin_username: "admin"
+      zato_dashboard_admin_password: "{{ zato_dashboard_admin_password }}"
+
+      zato_db_type: "{{ zato_db_type }}"
+      zato_db_host: "{{ zato_db_host }}"
+      zato_db_port: "{{ zato_db_port }}"
+      zato_db_main: "{{ zato_db_main }}"
+
+      zato_db_username_main: "{{ zato_db_username_main }}"
+      zato_db_password_main: "{{ zato_db_password_main }}"
+
+  tasks:
+
+    - name: Set facts (init)
+      set_fact:
+
+        zato_python_reqs: "{{ zato_python_reqs_tmp if zato_has_python_reqs_in_tmp else zato_python_reqs_opt }}"
+
+        zato_ssh_user_password: "{{ Zato_SSH_Password | default(zato_ssh_user_password) or zato_ssh_user_password }}"
+        zato_ide_publisher_password: "{{ Zato_IDE_Password | default(zato_ide_publisher_password) or zato_ide_publisher_password }}"
+        zato_dashboard_admin_password: "{{ Zato_Dashboard_Password | default(zato_dashboard_admin_password) or zato_dashboard_admin_password }}"
+
+        zato_db_password_main: "{{ Zato_ODB_Password | default(zato_db_password_main) or zato_db_password_main }}"
+        zato_db_password_pubsub: "{{ Zato_ODB_Password | default(zato_db_password_pubsub) or zato_db_password_pubsub }}"
+
+        zato_db_type: "{{ Zato_ODB_Type | default('postgresql') or 'postgresql' }}"
+        zato_db_host: "{{ Zato_ODB_Hostname | default('localhost') or 'localhost' }}"
+        zato_db_port: "{{ Zato_ODB_Port | default('5432') or '5432' }}"
+
+        zato_cluster_name: "{{ Zato_Cluster_Name | default('cluster1') }}"
+
+        zato_root_level_user: "{{ Zato_Root_Level_User | default(None) }}"
+        zato_hot_deploy_prefer_snapshots: "{{ Zato_Hot_Deploy_Prefer_Snapshots | default(True) }}"
+        zato_firewall_limit_to_local_connections: "{{ Zato_Firewall_Limit_To_Local_Connections | default(False) }}"
+
+        zato_hashicorp_vault_token: "{{ Zato_Hashicorp_Vault_Token | default(zato_hashicorp_vault_token) or zato_hashicorp_vault_token }}"
+
+    - name: Run tasks 01 (init)
+      when: zato_qs_run_01
+      import_tasks: zato-quickstart-01.yaml
+
+    - name: Run tasks 02 (init)
+      when: zato_qs_run_02
+      import_tasks: zato-quickstart-02.yaml
