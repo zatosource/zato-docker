@@ -1,3 +1,0 @@
-[submodule "zato-ansible"]
-	path = zato-ansible
-	url = https://github.com/zatosource/zato-ansible
