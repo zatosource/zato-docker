@@ -12,16 +12,6 @@ ZATO_ANSIBLE_QS_DIR=$(ZATO_ANSIBLE_DIR)/quickstart
 PARENT_IMAGE_DIR=$(CURDIR)/parent
 QUICKSTART_IMAGE_DIR=$(CURDIR)/quickstart
 
-git-sync:
-	cd $(ZATO_ANSIBLE_DIR)
-	git submodule update --init --recursive
-	git checkout main
-	cd ..
-	git add .
-	git add zato-ansible
-	git commit -m "GH #1 - Pulling latest changes from zato-ansible." || true
-	git push || true
-
 parent-build:
 	cp $(ZATO_ANSIBLE_QS_DIR)/* $(PARENT_IMAGE_DIR)
 	cd $(PARENT_IMAGE_DIR)
@@ -55,7 +45,6 @@ quickstart-all:
 	$(MAKE) quickstart-push
 
 all-build-push:
-	$(MAKE) git-sync
 	$(MAKE) parent-all
 	$(MAKE) quickstart-all
 
