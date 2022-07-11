@@ -446,16 +446,16 @@
   become_user: "root"
   shell: |
     echo "{{ zato_start_preamble }}" > {{ zato_env_path }}/start-server-fg.sh
-    echo "~/current/bin/zato start {{ zato_env_path }}/server1 --fg" >> {{ zato_env_path }}/start-server-fg.sh
+    echo "~/current/bin/zato start {{ zato_env_path }}/server1 --fg --env-file /opt/hot-deploy/enmasse/env.ini" >> {{ zato_env_path }}/start-server-fg.sh
 
     echo "{{ zato_start_preamble }}" > {{ zato_env_path }}/start-web-admin-fg.sh
-    echo "~/current/bin/zato start {{ zato_env_path }}/web-admin --fg" >> {{ zato_env_path }}/start-web-admin-fg.sh
+    echo "~/current/bin/zato start {{ zato_env_path }}/web-admin --fg --env-file /opt/hot-deploy/enmasse/env.ini" >> {{ zato_env_path }}/start-web-admin-fg.sh
 
     echo "{{ zato_start_preamble }}" > {{ zato_env_path }}/start-load-balancer-fg.sh
-    echo "~/current/bin/zato start {{ zato_env_path }}/load-balancer --fg" >> {{ zato_env_path }}/start-load-balancer-fg.sh
+    echo "~/current/bin/zato start {{ zato_env_path }}/load-balancer --fg --env-file /opt/hot-deploy/enmasse/env.ini" >> {{ zato_env_path }}/start-load-balancer-fg.sh
 
     echo "{{ zato_start_preamble }}" > {{ zato_env_path }}/start-scheduler-fg.sh
-    echo "~/current/bin/zato start {{ zato_env_path }}/scheduler --fg" >> {{ zato_env_path }}/start-scheduler-fg.sh
+    echo "~/current/bin/zato start {{ zato_env_path }}/scheduler --fg --env-file /opt/hot-deploy/enmasse/env.ini" >> {{ zato_env_path }}/start-scheduler-fg.sh
 
     chown zato:zato {{ zato_env_path }}/start-*.sh
     chmod 764 {{ zato_env_path }}/start-*.sh
@@ -504,7 +504,7 @@
   async: "{{ zato_async_timeout }}"
   poll: 0
 
-- name: Wait for the environment to start (up to 10-20 seconds) (02)
+- name: Waiting for the environment to start (02)
   become: true
   become_user: "zato"
   shell: |
