@@ -381,6 +381,12 @@
     chmod 400 /opt/zato/.ssh/*
     chmod 700 /opt/zato/.ssh
 
+- name: Ensure scripts exist (zato) (02)
+  become: true
+  become_user: "zato"
+  shell: |
+    echo "" >> ~/.bashrc_zato
+
 - name: Set Bash defaults (zato) (02)
   become: true
   become_user: "zato"
@@ -397,6 +403,8 @@
     echo "export ZATO_HOT_DEPLOY_DIR=/opt/hot-deploy/services" >> ~/.bashrc
     echo "export ZATO_USER_CONF_DIR=/opt/hot-deploy/user-conf:/tmp/zato-user-conf" >> ~/.bashrc
     echo "export ZATO_HOT_DEPLOY_PREFER_SNAPSHOTS={{ zato_hot_deploy_prefer_snapshots }}" >> ~/.bashrc
+
+    echo "source ~/.bashrc_zato" >> ~/.bashrc
 
 - name: Set Bash defaults (root) (02)
   become: true
