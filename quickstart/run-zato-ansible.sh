@@ -26,6 +26,7 @@ env_keys = [
     'Zato_IP_Address',
     'Zato_Host_Dashboard_Port',
     'Zato_Host_Server_Port',
+    'Zato_Host_Server_Num',
     'Zato_Host_LB_Port',
     'Zato_Host_Database_Port',
     'Zato_Host_SSH_Port',

@@ -305,6 +305,7 @@
         --odb-user {{ zato_db_username_main }} \
         --odb-password '{{ zato_db_password_main }}' \
         --cluster-name '{{ zato_cluster_name }}' \
+        --skip-if-exists \
         --verbose
 
 - name: Enable Redis (02)

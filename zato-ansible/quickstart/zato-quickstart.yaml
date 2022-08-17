@@ -10,10 +10,10 @@
 
     zato_env_path: "/opt/zato/env/qs-1"
 
-    zato_db_main: "zato_db_main1"
+    zato_db_main: "{{ Zato_ODB_Name | default('zato_db_main1') }}"
     zato_db_pubsub: "zato_db_pubsub1"
 
-    zato_db_username_main: "zato_user_main1"
+    zato_db_username_main: "{{ Zato_ODB_Username | default('zato_user_main1') }}"
     zato_db_username_pubsub: "zato_user_pubsub1"
 
     pg_conf_path: "/etc/postgresql/{{ pg_version }}/main/postgresql.conf"
