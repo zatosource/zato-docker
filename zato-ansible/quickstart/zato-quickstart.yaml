@@ -37,13 +37,6 @@
     zato_hashicorp_vault_token: "{{ 'zatotoken' + lookup('password', '/dev/null chars=ascii_lowercase,digits length=20') }}"
 
     zato_async_timeout: "{{ 3600 * 24 * 365 * 100 }}" # 1 hour (in seconds) * 24 hours * 365 days * 100 years
-    zato_start_preamble: |
-        export PATH=$PATH:~/current/bin
-        export PYTHONPATH=$PYTHONPATH:/opt/zato/current/extlib
-        export ZATO_PYTHON_REQS={{ zato_python_reqs }}
-        export ZATO_HOT_DEPLOY_DIR=/opt/hot-deploy/services
-        export ZATO_USER_CONF_DIR=/opt/hot-deploy/user-conf:/tmp/zato-user-conf
-        export ZATO_HOT_DEPLOY_PREFER_SNAPSHOTS={{ zato_hot_deploy_prefer_snapshots }}
 
     zato_run_internal_tests: "{{ Zato_Run_Internal_Tests | default(False) }}"
     zato_has_python_reqs_in_tmp: "{{ Zato_Has_Python_Reqs_In_Tmp | default(False) }}"
@@ -65,6 +58,15 @@
     zato_pre_enmasse_script: "{{ Zato_Pre_Enmasse_Script | default(False) }}"
     zato_post_install_script: "{{ Zato_Post_Install_Script | default(False) }}"
     zato_env_file: "{{ Zato_Env_File | default('/env-file-does-not-exist') }}"
+    zato_hot_deploy_dir: "{{ Zato_Hot_Deploy_Dir | default('') }}"
+
+    zato_start_preamble: |
+        export PATH=$PATH:~/current/bin
+        export PYTHONPATH=$PYTHONPATH:/opt/zato/current/extlib
+        export ZATO_PYTHON_REQS={{ zato_python_reqs }}
+        export ZATO_HOT_DEPLOY_DIR=/opt/hot-deploy/services:{{ zato_hot_deploy_dir }}
+        export ZATO_USER_CONF_DIR=/opt/hot-deploy/user-conf:/tmp/zato-user-conf
+        export ZATO_HOT_DEPLOY_PREFER_SNAPSHOTS={{ zato_hot_deploy_prefer_snapshots }}
 
     environment_config:
 
