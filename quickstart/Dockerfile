@@ -9,10 +9,14 @@ RUN set -x && \
 RUN pip3 install ansible
 
 # Copy the base Ansible playbook for use inside the container
-COPY zato-quickstart.yaml    /zato-ansible/zato-quickstart.yaml
-COPY zato-quickstart-01.yaml /zato-ansible/zato-quickstart-01.yaml
-COPY zato-quickstart-02.yaml /zato-ansible/zato-quickstart-02.yaml
-COPY run-zato-ansible.sh     /zato-ansible/run-zato-ansible.sh
+COPY quickstart/test_odb_tables.sql    /var/lib/postgresql/scripts/test_odb_tables.sql
+COPY quickstart/test_odb_cluster.sql    /var/lib/postgresql/scripts/test_odb_cluster.sql
+COPY quickstart/test_server_cluster.sql    /var/lib/postgresql/scripts/test_server_cluster.sql
+COPY zato-ansible/quickstart/zato-quickstart.yaml    /zato-ansible/zato-quickstart.yaml
+COPY zato-ansible/quickstart/zato-quickstart-01.yaml /zato-ansible/zato-quickstart-01.yaml
+COPY zato-ansible/quickstart/zato-quickstart-02.yaml /zato-ansible/zato-quickstart-02.yaml
+COPY quickstart/run-zato-ansible.sh     /zato-ansible/run-zato-ansible.sh
+
 
 # Make sure that Docker mounts Python requirements as a file
 RUN mkdir -p /opt/hot-deploy/python-reqs/ && \

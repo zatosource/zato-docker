@@ -289,24 +289,162 @@
   shell: |
     rm -rf {{ zato_env_path }}
 
-- name: Create a quickstart environment (02)
+- name: Check if ODB cluster table exists (02)
+  when: zato_use_postgresql
+  become: true
+  become_user: "postgres"
+  community.postgresql.postgresql_script:
+    db: "{{ zato_db_main }}"
+    login_host: "{{ zato_db_host }}"
+    login_user: "{{ zato_db_username_main }}"
+    login_password: "{{ zato_db_password_main }}"
+    path: "/var/lib/postgresql/scripts/test_odb_tables.sql"
+  register: cluster_table_exists
+
+- name: Create ODB if it is a new environment (02)
+  when: cluster_table_exists.rowcount < 1
   become: true
   become_user: "zato"
   shell: |
     PATH=$PATH:~/current/bin &&
-    {{ zato_env_path }}/zato-qs-stop.sh || true &&
-    rm -rf {{ zato_env_path }} &&
-    zato quickstart \
-        {{ zato_env_path }} \
+    zato create odb \
         --odb-type {{ zato_db_type }} \
         --odb-host {{ zato_db_host }} \
         --odb-port {{ zato_db_port }} \
         --odb-db-name {{ zato_db_main }} \
         --odb-user {{ zato_db_username_main }} \
         --odb-password '{{ zato_db_password_main }}' \
-        --cluster-name '{{ zato_cluster_name }}' \
         --skip-if-exists \
         --verbose
+
+- name: Check if ODB cluster exists (02)
+  when: zato_use_postgresql
+  become: true
+  become_user: "postgres"
+  community.postgresql.postgresql_script:
+    db: "{{ zato_db_main }}"
+    login_host: "{{ zato_db_host }}"
+    login_user: "{{ zato_db_username_main }}"
+    login_password: "{{ zato_db_password_main }}"
+    path: "/var/lib/postgresql/scripts/test_odb_cluster.sql"
+    named_args:
+      cluster_name: "{{ zato_cluster_name }}"
+  register: cluster_exists
+
+- name: Debug ODB cluster
+  ansible.builtin.debug:
+    msg: "{{ cluster_exists }}"
+
+- name: Create ODB Cluster (02)
+  when: cluster_exists.rowcount == 0
+  become: true
+  become_user: "zato"
+  shell: |
+    PATH=$PATH:~/current/bin &&
+    zato create cluster \
+        --odb-type {{ zato_db_type }} \
+        --odb-host {{ zato_db_host }} \
+        --odb-port {{ zato_db_port }} \
+        --odb-db-name {{ zato_db_main }} \
+        --odb-user {{ zato_db_username_main }} \
+        --odb-password '{{ zato_db_password_main }}' \
+        --lb-host {{ zato_lb_host }} \
+        --lb-port {{ zato_lb_port }} \
+        --lb-agent_port {{ zato_lb_agent_port }} \
+        --secret-key {{ zato_secret_key }} \
+        --admin-invoke-password {{ zato_dashboard_admin_password }} \
+        --verbose \
+        {{ zato_cluster_name }}
+
+- name: Check if Server exists in cluster (02)
+  become: true
+  become_user: "postgres"
+  community.postgresql.postgresql_script:
+    db: "{{ zato_db_main }}"
+    login_host: "{{ zato_db_host }}"
+    login_user: "{{ zato_db_username_main }}"
+    login_password: "{{ zato_db_password_main }}"
+    path: "/var/lib/postgresql/scripts/test_server_cluster.sql"
+    named_args:
+      server_id: "{{ zato_server_name }}"
+      cluster_name: "{{ zato_cluster_name }}"
+  register: server_exists
+
+- name: Debug Servers in cluster
+  ansible.builtin.debug:
+    msg: "{{ server_exists }}"
+
+- name: Create Server (02)
+  become: true
+  become_user: "zato"
+  shell: |
+    PATH=$PATH:~/current/bin &&
+    rm -rf {{ zato_env_path }}/server1 &&
+    zato create server \
+        --odb-type {{ zato_db_type }} \
+        --odb-host {{ zato_db_host }} \
+        --odb-port {{ zato_db_port }} \
+        --odb-db-name {{ zato_db_main }} \
+        --odb-user {{ zato_db_username_main }} \
+        --odb-password '{{ zato_db_password_main }}' \
+        --skip-if-exists \
+        --verbose \
+        --http-port {{ zato_server_port }} \
+        --scheduler-host {{ zato_scheduler_host }} \
+        --scheduler-port {{ zato_scheduler_port }} \
+        --secret-key {{ zato_secret_key }} \
+        --jwt-secret {{ zato_jwt_secret }} \
+        {{ zato_env_path }}/server1/ \
+        {{ zato_cluster_name }} \
+        {{ zato_server_name }}
+
+- name: Create Load Balancer (02)
+  become: true
+  become_user: "zato"
+  shell: |
+    PATH=$PATH:~/current/bin &&
+    rm -rf {{ zato_env_path }}/load-balancer &&
+    zato create load-balancer \
+        --verbose \
+        {{ zato_env_path }}/load-balancer/
+
+- name: Create Web Admin/Dashboard (02)
+  become: true
+  become_user: "zato"
+  shell: |
+    PATH=$PATH:~/current/bin &&
+    rm -rf {{ zato_env_path }}/web-admin &&
+    zato create web-admin \
+        --odb-type {{ zato_db_type }} \
+        --odb-host {{ zato_db_host }} \
+        --odb-port {{ zato_db_port }} \
+        --odb-db-name {{ zato_db_main }} \
+        --odb-user {{ zato_db_username_main }} \
+        --odb-password '{{ zato_db_password_main }}' \
+        --skip-if-exists \
+        --verbose \
+        --admin-invoke-password {{ zato_dashboard_admin_password }} \
+        {{ zato_env_path }}/web-admin/
+
+- name: Create Scheduler (02)
+  become: true
+  become_user: "zato"
+  shell: |
+    PATH=$PATH:~/current/bin &&
+    rm -rf {{ zato_env_path }}/scheduler &&
+    zato create scheduler \
+        --odb-type {{ zato_db_type }} \
+        --odb-host {{ zato_db_host }} \
+        --odb-port {{ zato_db_port }} \
+        --odb-db-name {{ zato_db_main }} \
+        --odb-user {{ zato_db_username_main }} \
+        --odb-password '{{ zato_db_password_main }}' \
+        --skip-if-exists \
+        --verbose \
+        --cluster-name {{ zato_cluster_name }} \
+        --secret-key {{ zato_secret_key }} \
+        --initial-sleep-time 30 \
+        {{ zato_env_path }}/scheduler/
 
 - name: Enable Redis (02)
   when: zato_enable_redis
@@ -347,6 +485,12 @@
     content: |
       {{ environment_config | to_nice_json }}
     dest: ~/env/details/all-zato-env-details.json
+
+- name: Save Secret Key (02)
+  local_action: copy content="{{ zato_secret_key }}" dest={{ zato_secret_key_file }}
+
+- name: Save JWT Secret (02)
+  local_action: copy content="{{ zato_jwt_secret }}" dest={{ zato_jwt_secret_file }}
 
 - name: Save SSH credentials (02)
   local_action: copy content="{{ zato_ssh_user_password }}" dest={{ zato_ssh_user_password_file }}
@@ -473,6 +617,16 @@
   shell: |
     chown -R zato:zato /opt/zato
 
+- name: Add servers to load-balancer
+  become: true
+  become_user: "zato"
+  replace:
+    path: "{{ zato_env_path }}/load-balancer/config/repo/zato.config"
+    regexp: 'ZATO begin backend bck_http_plain'
+    replace: |-
+      ZATO begin backend bck_http_plain
+        server http_plain--{{ zato_server_name }} {{ zato_server_host }}:{{ zato_server_port }} check inter 2s rise 2 fall 2 # ZATO backend bck_http_plain:server--{{ zato_server_name }}
+
 - name: Start the quickstart environment (server) (02)
   become: true
   become_user: "zato"
@@ -513,11 +667,11 @@
 
 - name: Check that the server started (02)
   uri:
-    url: http://127.0.0.1:17010/zato/ping
+    url: http://{{ zato_server_host }}:17010/zato/ping
 
 - name: Check that the load-balancer started (02)
   uri:
-    url: http://127.0.0.1:11223/zato/ping
+    url: http://{{ zato_lb_host }}:11223/zato/ping
 
 - name: Check that the dashboard started (02)
   uri:

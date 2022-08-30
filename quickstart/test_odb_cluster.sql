@@ -1,0 +1,1 @@
+SELECT id FROM cluster WHERE name = %(cluster_name)s

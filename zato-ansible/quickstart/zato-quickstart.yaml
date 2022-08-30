@@ -22,6 +22,8 @@
     zato_python_reqs_opt: "/opt/hot-deploy/python-reqs/requirements.txt"
     zato_python_reqs_tmp: "/tmp/zato-user-reqs/requirements.txt"
 
+    zato_secret_key_file: /opt/zato/env/details/zato-secret-key.txt
+    zato_jwt_secret_file: /opt/zato/env/details/zato-jwt-secret.txt
     zato_ssh_user_password_file: /opt/zato/env/details/zato-ssh-user-password.txt
     zato_ide_publisher_password_file: /opt/zato/env/details/zato-ide-publisher-password.txt
     zato_dashboard_admin_password_file: /opt/zato/env/details/zato-dashboard-admin-password.txt
@@ -37,13 +39,6 @@
     zato_hashicorp_vault_token: "{{ 'zatotoken' + lookup('password', '/dev/null chars=ascii_lowercase,digits length=20') }}"
 
     zato_async_timeout: "{{ 3600 * 24 * 365 * 100 }}" # 1 hour (in seconds) * 24 hours * 365 days * 100 years
-    zato_start_preamble: |
-        export PATH=$PATH:~/current/bin
-        export PYTHONPATH=$PYTHONPATH:/opt/zato/current/extlib
-        export ZATO_PYTHON_REQS={{ zato_python_reqs }}
-        export ZATO_HOT_DEPLOY_DIR=/opt/hot-deploy/services
-        export ZATO_USER_CONF_DIR=/opt/hot-deploy/user-conf:/tmp/zato-user-conf
-        export ZATO_HOT_DEPLOY_PREFER_SNAPSHOTS={{ zato_hot_deploy_prefer_snapshots }}
 
     zato_run_internal_tests: "{{ Zato_Run_Internal_Tests | default(False) }}"
     zato_has_python_reqs_in_tmp: "{{ Zato_Has_Python_Reqs_In_Tmp | default(False) }}"
@@ -65,7 +60,16 @@
     zato_pre_enmasse_script: "{{ Zato_Pre_Enmasse_Script | default(False) }}"
     zato_post_install_script: "{{ Zato_Post_Install_Script | default(False) }}"
     zato_env_file: "{{ Zato_Env_File | default('/env-file-does-not-exist') }}"
+    zato_hot_deploy_dir: "{{ Zato_Hot_Deploy_Dir | default('') }}"
 
+    zato_start_preamble: |
+        export PATH=$PATH:~/current/bin
+        export PYTHONPATH=$PYTHONPATH:/opt/zato/current/extlib
+        export ZATO_PYTHON_REQS={{ zato_python_reqs }}
+        export ZATO_HOT_DEPLOY_DIR=/opt/hot-deploy/services
+        export ZATO_USER_CONF_DIR=/opt/hot-deploy/user-conf:/tmp/zato-user-conf
+        export ZATO_HOT_DEPLOY_PREFER_SNAPSHOTS={{ zato_hot_deploy_prefer_snapshots }}
+        
     environment_config:
 
       zato_env_path: "{{ zato_env_path }}"
@@ -83,6 +87,12 @@
       zato_db_host: "{{ zato_db_host }}"
       zato_db_port: "{{ zato_db_port }}"
       zato_db_main: "{{ zato_db_main }}"
+
+      zato_lb_host: "{{ zato_lb_host }}"
+      zato_lb_port: "{{ zato_lb_port }}"
+
+      zato_server_host: "{{ zato_server_host }}"
+      zato_server_port: "{{ zato_server_port }}"
 
       zato_db_username_main: "{{ zato_db_username_main }}"
       zato_db_password_main: "{{ zato_db_password_main }}"
@@ -105,7 +115,22 @@
         zato_db_host: "{{ Zato_ODB_Hostname | default('localhost') or 'localhost' }}"
         zato_db_port: "{{ Zato_ODB_Port | default('5432') or '5432' }}"
 
+        zato_lb_host: "{{ Zato_LB_Host | default('0.0.0.0') or '0.0.0.0' }}"
+        zato_lb_port: "{{ Zato_LB_Port | default('11223') or '11223' }}"
+        zato_lb_agent_port: "{{ Zato_LB_Agent_Port | default('20151') or '20151' }}"
+
         zato_cluster_name: "{{ Zato_Cluster_Name | default('cluster1') }}"
+
+        zato_secret_key: "{{ Zato_Secret_Key | mandatory }}"
+        zato_jwt_secret: "{{ Zato_Jwt_Secret | mandatory }}"
+
+        zato_scheduler_host: "{{ Zato_Scheduler_Host | default('127.0.0.1') or '127.0.0.1' }}"
+        zato_scheduler_port: "{{ Zato_Scheduler_Port | default('998877') or '998877' }}"
+
+        zato_server_host: "{{ Zato_Host_Server_Host | default('127.0.0.1') or '127.0.0.1' }}"
+        zato_server_port: "{{ Zato_Host_Server_Port | default('17010') or '17010' }}"
+        zato_server_num: "{{ Zato_Host_Server_Num | default('2') or '2' }}"
+        zato_server_name: "{{ Zato_Host_Server_Name | default('server1') or 'server1' }}"
 
         zato_root_level_user: "{{ Zato_Root_Level_User | default(None) }}"
         zato_hot_deploy_prefer_snapshots: "{{ Zato_Hot_Deploy_Prefer_Snapshots | default(True) }}"
