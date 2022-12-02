@@ -16,4 +16,4 @@ jobs:
   zato-run-docker:
     runs-on: ubuntu-22.04
     steps:
-       - run: docker run ghcr.io/zatosource/zato-3.2-quickstart:latest | xargs timeout 120 || true
+       - run: echo "docker run ghcr.io/zatosource/zato-3.2-quickstart:latest" | xargs timeout 120 || true
