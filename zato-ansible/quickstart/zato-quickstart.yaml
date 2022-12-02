@@ -36,7 +36,7 @@
     zato_db_password_pubsub: "{{ 'zato.db.ps.' + lookup('password', '/dev/null chars=ascii_lowercase,digits length=20') }}"
     zato_hashicorp_vault_token: "{{ 'zatotoken' + lookup('password', '/dev/null chars=ascii_lowercase,digits length=20') }}"
 
-    zato_async_timeout: "{{ 3600 * 24 * 365 * 100 }}" # 1 hour (in seconds) * 24 hours * 365 days * 100 years
+    zato_async_timeout: "{{ Zato_Async_Timeout | default(3600 * 24 * 365 * 100) }}" # 1 hour (in seconds) * 24 hours * 365 days * 100 years
 
     zato_run_internal_tests: "{{ Zato_Run_Internal_Tests | default(False) }}"
     zato_has_python_reqs_in_tmp: "{{ Zato_Has_Python_Reqs_In_Tmp | default(False) }}"
