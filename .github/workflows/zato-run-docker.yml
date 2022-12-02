@@ -1,10 +1,7 @@
-name: Run Zato Docker Quickstart Workflow
+name: Zato Docker Quickstart
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - zato-does-not-exist
 
 concurrency:
   group: build-${{ github.ref }}
