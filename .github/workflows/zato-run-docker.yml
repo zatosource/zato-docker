@@ -16,8 +16,4 @@ jobs:
   zato-run-docker:
     runs-on: ubuntu-22.04
     steps:
-      - uses: addnab/docker-run-action@v3
-        with:
-          registry: ghcr.io
-          image: zatosource/zato-3.2-quickstart:latest
-          run: echo "Hello from Zato"
+      - run: echo "Hello from Zato"
