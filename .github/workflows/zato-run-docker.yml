@@ -5,8 +5,8 @@ on:
     branches:
       - 'main'
   schedule:
-    # Every day at 03:17 AM
-    - cron: "17 3 * * *"
+    # Every day at 05:17 AM
+    - cron: "17 5 * * *"
 
 concurrency:
   group: build-${{ github.ref }}
@@ -15,5 +15,6 @@ concurrency:
 jobs:
   zato-run-docker:
     runs-on: ubuntu-22.04
+    timeout-minutes: 5
     steps:
       - run: docker run ghcr.io/zatosource/zato-3.2-quickstart:latest
