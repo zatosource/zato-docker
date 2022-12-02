@@ -1,6 +1,7 @@
 name: Run Zato Docker Quickstart Workflow
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - zato-does-not-exist
