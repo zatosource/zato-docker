@@ -1,4 +1,4 @@
-name: Compile Zato from source code
+name: Build a Zato quickstart container
 
 on:
   push:
@@ -13,11 +13,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  zato-compile:
+  zato-run-docker:
     runs-on: ubuntu-22.04
     steps:
       - uses: addnab/docker-run-action@v3
         with:
-          registry: ghcr.io/zatosource/zato-3.2:latest
+          registry: ghcr.io
           image: zatosource/zato-3.2:latest
           run: echo "Hello from Zato"
