@@ -294,6 +294,7 @@
   become_user: "zato"
   shell: |
     PATH=$PATH:~/current/bin &&
+    {{ zato_env_path }}/zato-qs-stop.sh || true &&
     rm -rf {{ zato_env_path }} &&
     zato quickstart \
         {{ zato_env_path }} \
