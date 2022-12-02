@@ -1,4 +1,4 @@
-name: Build a Zato quickstart container
+name: Run Zato Docker Quickstart Workflow
 
 on:
   push:
