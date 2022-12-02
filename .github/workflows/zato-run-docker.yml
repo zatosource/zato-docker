@@ -1,0 +1,23 @@
+name: Compile Zato from source code
+
+on:
+  push:
+    branches:
+      - 'main'
+  schedule:
+    # Every day at 03:17 AM
+    - cron: "17 3 * * *"
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  zato-compile:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: addnab/docker-run-action@v3
+        with:
+          registry: ghcr.io/zatosource/zato-3.2:latest
+          image: zatosource/zato-3.2:latest
+          run: echo "Hello from Zato"
