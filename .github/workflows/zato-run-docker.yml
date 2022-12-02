@@ -18,6 +18,6 @@ jobs:
     steps:
       - uses: addnab/docker-run-action@v3
         with:
-          registry: ghcr.io/zatosource
-          image: zato-3.2-quickstart:latest
+          registry: ghcr.io
+          image: zatosource/zato-3.2-quickstart:latest
           run: echo "Hello from Zato"
