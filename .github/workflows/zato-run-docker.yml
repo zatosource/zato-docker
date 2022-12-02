@@ -3,7 +3,7 @@ name: Build a Zato quickstart container
 on:
   push:
     branches:
-      - 'zato-does-not-exist'
+      - zato-does-not-exist
 
 concurrency:
   group: build-${{ github.ref }}
@@ -13,4 +13,5 @@ jobs:
   zato-run-docker:
     runs-on: ubuntu-22.04
     steps:
-      - run: docker run ghcr.io/zatosource/zato-3.2-quickstart:latest
+      - name: Run Zato Docker Quickstart
+        run: docker run ghcr.io/zatosource/zato-3.2-quickstart:latest
