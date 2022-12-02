@@ -67,6 +67,7 @@
         export ZATO_HOT_DEPLOY_DIR=/opt/hot-deploy/services:{{ zato_hot_deploy_dir }}
         export ZATO_USER_CONF_DIR=/opt/hot-deploy/user-conf:/tmp/zato-user-conf
         export ZATO_HOT_DEPLOY_PREFER_SNAPSHOTS={{ zato_hot_deploy_prefer_snapshots }}
+        export ZATO_STOP_AFTER={{ lookup('ansible.builtin.env', 'ZATO_STOP_AFTER' }}
 
     environment_config:
 
