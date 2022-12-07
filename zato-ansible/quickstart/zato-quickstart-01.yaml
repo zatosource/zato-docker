@@ -75,7 +75,7 @@
   when: zato_install_binaries
   apt_key:
     state: present
-    url: https://zato.io/repo/zato-signing-key.pgp.asc
+    url: https://zato.io/repo/zato-deb-signing-key.pgp.asc
 
 - name: Get the system's codename (01)
   command: "lsb_release -cs"
