@@ -331,10 +331,6 @@
       cluster_name: "{{ zato_cluster_name }}"
   register: cluster_exists
 
-- name: Debug ODB cluster
-  ansible.builtin.debug:
-    msg: "{{ cluster_exists }}"
-
 - name: Create ODB Cluster (02)
   when: cluster_exists.rowcount == 0
   become: true
@@ -370,10 +366,6 @@
       cluster_name: "{{ zato_cluster_name }}"
   register: server_exists
 
-- name: Debug Servers in cluster
-  ansible.builtin.debug:
-    msg: "{{ server_exists }}"
-
 - name: Create Server (02)
   become: true
   become_user: "zato"
@@ -408,7 +400,41 @@
         --verbose \
         {{ zato_env_path }}/load-balancer/
 
+- name: Delete admin user profile (02)
+  community.postgresql.postgresql_query:
+    db: "{{ zato_db_main }}"
+    login_host: "{{ zato_db_host }}"
+    login_user: "{{ zato_db_username_main }}"
+    login_password: "{{ zato_db_password_main }}"
+    query: DELETE FROM user_profile WHERE user_id in (select id from auth_user where username = %(username)s)
+    named_args:
+      username: "{{ zato_admin_user_name }}"
+
+- name: Delete admin user (02)
+  community.postgresql.postgresql_query:
+    db: "{{ zato_db_main }}"
+    login_host: "{{ zato_db_host }}"
+    login_user: "{{ zato_db_username_main }}"
+    login_password: "{{ zato_db_password_main }}"
+    query: DELETE FROM auth_user WHERE username = %(username)s
+    named_args:
+      username: "{{ zato_admin_user_name }}"
+
+- name: Check if Admin user exists in cluster (02)
+  become: true
+  become_user: "postgres"
+  community.postgresql.postgresql_script:
+    db: "{{ zato_db_main }}"
+    login_host: "{{ zato_db_host }}"
+    login_user: "{{ zato_db_username_main }}"
+    login_password: "{{ zato_db_password_main }}"
+    path: "/var/lib/postgresql/scripts/test_admin_user.sql"
+    named_args:
+      username: "{{ zato_admin_user_name }}"
+  register: admin_user_exists
+
 - name: Create Web Admin/Dashboard (02)
+  when: admin_user_exists.rowcount == 0
   become: true
   become_user: "zato"
   shell: |
@@ -617,7 +643,16 @@
   shell: |
     chown -R zato:zato /opt/zato
 
-- name: Add servers to load-balancer
+- name: Set DEBUG to 1 in Web Admin (02)
+  become: true
+  become_user: "zato"
+  replace:
+    path: "{{ zato_env_path }}/web-admin/config/repo/web-admin.conf"
+    regexp: '"DEBUG": 0"'
+    replace: |-
+      '"DEBUG": 1'
+
+- name: Add servers to load-balancer (02)
   become: true
   become_user: "zato"
   replace:
@@ -626,6 +661,12 @@
     replace: |-
       ZATO begin backend bck_http_plain
         server http_plain--{{ zato_server_name }} {{ zato_server_host }}:{{ zato_server_port }} check inter 2s rise 2 fall 2 # ZATO backend bck_http_plain:server--{{ zato_server_name }}
+
+- name: Copy settings to (dashboard) (02)
+  become: true
+  become_user: "zato"
+  shell: |
+    cp /opt/settings.py /opt/zato/current/zato-web-admin/src/zato/admin
 
 - name: Start the quickstart environment (server) (02)
   become: true
@@ -663,7 +704,7 @@
   become: true
   become_user: "zato"
   shell: |
-    ~/current/bin/zato wait --path {{ zato_env_path }}/server1 --timeout 120 --silent
+    ~/current/bin/zato wait --path {{ zato_env_path }}/server1 --timeout {{ zato_server_wait }} --silent
 
 - name: Check that the server started (02)
   uri:

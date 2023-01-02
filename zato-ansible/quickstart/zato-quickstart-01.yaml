@@ -36,7 +36,7 @@
       - python3-virtualenv
       - apt-transport-https
       - software-properties-common
-
+      
 - name: Install MySQL (01)
   when: zato_use_mysql
   apt:
@@ -95,6 +95,13 @@
 
 - name: Update apt cache before the installation of packages (01)
   apt: update_cache=yes
+
+- name: Install OpenJDK (for Spark Analytics) (02)
+  when: zato_run_spark
+  apt:
+    state: latest
+    name: openjdk-11-jdk
+    update_cache: yes
 
 - name: Install PostgreSQL {{ pg_version }} (01)
   when: zato_use_postgresql

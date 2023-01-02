@@ -1,7 +1,7 @@
 FROM ubuntu:focal
 
 # Install prerequisites for Ansible
-RUN apt-get update && \
+RUN apt-get update && apt upgrade -y && \
     apt-get -y install python3 python3-nacl python3-pip libffi-dev sudo
 
 # Install Ansible

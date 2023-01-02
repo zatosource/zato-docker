@@ -41,6 +41,7 @@
     zato_async_timeout: "{{ 3600 * 24 * 365 * 100 }}" # 1 hour (in seconds) * 24 hours * 365 days * 100 years
 
     zato_run_internal_tests: "{{ Zato_Run_Internal_Tests | default(False) }}"
+    zato_run_spark: "{{ Zato_Run_Spark | default(True) }}"
     zato_has_python_reqs_in_tmp: "{{ Zato_Has_Python_Reqs_In_Tmp | default(False) }}"
     zato_firewall_limit_to_local_connections: "{{ Zato_Firewall_Limit_To_Local_Connections | default(False) }}"
 
@@ -107,6 +108,7 @@
         zato_ssh_user_password: "{{ Zato_SSH_Password | default(zato_ssh_user_password) or zato_ssh_user_password }}"
         zato_ide_publisher_password: "{{ Zato_IDE_Password | default(zato_ide_publisher_password) or zato_ide_publisher_password }}"
         zato_dashboard_admin_password: "{{ Zato_Dashboard_Password | default(zato_dashboard_admin_password) or zato_dashboard_admin_password }}"
+        zato_admin_user_name: "{{ Zato_Admin_User_Name | default('admin') }}"
 
         zato_db_password_main: "{{ Zato_ODB_Password | default(zato_db_password_main) or zato_db_password_main }}"
         zato_db_password_pubsub: "{{ Zato_ODB_Password | default(zato_db_password_pubsub) or zato_db_password_pubsub }}"
@@ -129,8 +131,10 @@
 
         zato_server_host: "{{ Zato_Host_Server_Host | default('127.0.0.1') or '127.0.0.1' }}"
         zato_server_port: "{{ Zato_Host_Server_Port | default('17010') or '17010' }}"
-        zato_server_num: "{{ Zato_Host_Server_Num | default('2') or '2' }}"
+        zato_server_num: "{{ Zato_Host_Server_Num | default(2) or 2 }}"
         zato_server_name: "{{ Zato_Host_Server_Name | default('server1') or 'server1' }}"
+
+        zato_server_wait: "{{ Zato_Host_Server_Wait | default(120) or 120 }}"
 
         zato_root_level_user: "{{ Zato_Root_Level_User | default(None) }}"
         zato_hot_deploy_prefer_snapshots: "{{ Zato_Hot_Deploy_Prefer_Snapshots | default(True) }}"

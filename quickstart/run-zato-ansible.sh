@@ -28,6 +28,7 @@ env_keys = [
     'Zato_Host_Server_Port',
     'Zato_Host_Server_Num',
     'Zato_Host_Server_Name',
+    'Zato_Host_Server_Wait',
     'Zato_Host_Scheduler_Host',
     'Zato_Host_Scheduler_Port',
     'Zato_Secret_Key',
@@ -40,6 +41,9 @@ env_keys = [
     'Zato_Run_Internal_Tests',
     'Zato_Run_Quickstart_Step_01',
     'Zato_Run_Quickstart_Step_02',
+    'Zato_Dashboard_Debug',
+    'Zato_Crsf_Trusted_Origins',
+    'Zato_Run_Spark'
 ]
 
 # Build a mapping of environment values that were provided on input

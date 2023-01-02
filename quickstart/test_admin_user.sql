@@ -1,0 +1,1 @@
+SELECT id FROM auth_user WHERE username = %(username)s
