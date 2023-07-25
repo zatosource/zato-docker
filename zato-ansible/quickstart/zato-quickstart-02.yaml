@@ -1,8 +1,4 @@
 
-- name: Mark Zato on hold via apt-get (02)
-  shell: |
-    apt-mark hold zato
-
 - name: Update and upgrade apt packages (02)
   apt:
     upgrade: yes
