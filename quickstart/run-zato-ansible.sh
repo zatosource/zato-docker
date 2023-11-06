@@ -10,11 +10,17 @@ from json import dumps
 env_keys = [
     'Zato_SSH_Password',
     'Zato_Dashboard_Password',
+    'Zato_Dashboard_Session_Timeout',
     'Zato_IDE_Password',
     'Zato_Python_Reqs',
     'Zato_Hot_Deploy_Dir',
     'Zato_User_Conf_Dir',
     'Zato_Extlib_Dir',
+    'Zato_Extra_User_1'
+    'Zato_Extra_User_2'
+    'Zato_Extra_User_3'
+    'Zato_Extra_User_4'
+    'Zato_Extra_User_5',
     'Zato_Enmasse_File',
     'Zato_Cluster_Name',
     'Zato_ODB_Type',
@@ -32,6 +38,13 @@ env_keys = [
     'Zato_Run_Internal_Tests',
     'Zato_Run_Quickstart_Step_01',
     'Zato_Run_Quickstart_Step_02',
+    'Zato_Server_Ping_On_Startup',
+    'Zato_Server_Ping_On_Startup_Request',
+    'Zato_Server_Ping_With_Interval',
+    'Zato_Server_Ping_With_Interval_Request',
+    'Zato_Server_Threads',
+    'Zato_Server_TLS_Verify',
+    'Zato_Stop_Server_After',
 ]
 
 # Build a mapping of environment values that were provided on input
