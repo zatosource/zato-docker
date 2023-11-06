@@ -50,11 +50,11 @@
 
     zato_install_playwright: "{{ Zato_Install_Playwright | default(False) }}"
 
-    zato_create_extra_user_1: "{{ Zato_Create_Extra_User_1 | default(False) }}"
-    zato_create_extra_user_2: "{{ Zato_Create_Extra_User_2 | default(False) }}"
-    zato_create_extra_user_3: "{{ Zato_Create_Extra_User_3 | default(False) }}"
-    zato_create_extra_user_4: "{{ Zato_Create_Extra_User_4 | default(False) }}"
-    zato_create_extra_user_5: "{{ Zato_Create_Extra_User_5 | default(False) }}"
+    zato_create_extra_user_01: "{{ Zato_Create_Extra_User_01 | default(False) }}"
+    zato_create_extra_user_02: "{{ Zato_Create_Extra_User_02 | default(False) }}"
+    zato_create_extra_user_03: "{{ Zato_Create_Extra_User_03 | default(False) }}"
+    zato_create_extra_user_04: "{{ Zato_Create_Extra_User_04 | default(False) }}"
+    zato_create_extra_user_05: "{{ Zato_Create_Extra_User_05 | default(False) }}"
 
     zato_ext_lib_dir: "{{ Zato_Extlib_Dir | default(False) }}"
     zato_map_ssh_dir: "{{ Zato_Map_SSH_Dir | default(False) }}"
