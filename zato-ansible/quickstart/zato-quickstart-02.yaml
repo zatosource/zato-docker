@@ -286,34 +286,34 @@
   poll: 0
 
 - name: Create extra user and add Zato to its group 1 (02)
-  when: zato_create_extra_user1
+  when: zato_create_extra_user_1
   shell: |
-    useradd {{ zato_create_extra_user1 }} || true
-    usermod -aG zato_create_extra_user1 zato
+    useradd {{ zato_create_extra_user_1 }} || true
+    usermod -aG zato_create_extra_user_1 zato
 
 - name: Create extra user add Zato to its group 2 (02)
-  when: zato_create_extra_user2
+  when: zato_create_extra_user_2
   shell: |
-    useradd {{ zato_create_extra_user2 }} || true
-    usermod -aG zato_create_extra_user2 zato
+    useradd {{ zato_create_extra_user_2 }} || true
+    usermod -aG zato_create_extra_user_2 zato
 
 - name: Create extra user add Zato to its group 3 (02)
-  when: zato_create_extra_user3
+  when: zato_create_extra_user_3
   shell: |
-    useradd {{ zato_create_extra_user3 }} || true
-    usermod -aG zato_create_extra_user3 zato
+    useradd {{ zato_create_extra_user_3 }} || true
+    usermod -aG zato_create_extra_user_3 zato
 
 - name: Create extra user add Zato to its group 4 (02)
-  when: zato_create_extra_user4
+  when: zato_create_extra_user_4
   shell: |
-    useradd {{ zato_create_extra_user4 }} || true
-    usermod -aG zato_create_extra_user4 zato
+    useradd {{ zato_create_extra_user_4 }} || true
+    usermod -aG zato_create_extra_user_4 zato
 
 - name: Create extra user add Zato to its group 5 (02)
-  when: zato_create_extra_user5
+  when: zato_create_extra_user_5
   shell: |
-    useradd {{ zato_create_extra_user5 }} || true
-    usermod -aG zato_create_extra_user5 zato
+    useradd {{ zato_create_extra_user_5 }} || true
+    usermod -aG zato_create_extra_user_5 zato
 
 - name: Make sure any previous environment is deleted (02)
   shell: |
