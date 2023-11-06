@@ -288,31 +288,41 @@
 - name: Create extra user and add Zato to its group 1 (02)
   when: zato_create_extra_user_01
   shell: |
-    useradd {{ zato_create_extra_user_01 }} || true
+    useradd {{ zato_create_extra_user_01 }}     \
+      --uid {{ zato_create_extra_user_01_uid }} \
+      --gid {{ zato_create_extra_user_01_gid }}
     usermod -aG {{ zato_create_extra_user_01 }} zato
 
 - name: Create extra user and add Zato to its group 2 (02)
   when: zato_create_extra_user_02
   shell: |
-    useradd {{ zato_create_extra_user_02 }} || true
+    useradd {{ zato_create_extra_user_02 }}     \
+      --uid {{ zato_create_extra_user_02_uid }} \
+      --gid {{ zato_create_extra_user_02_gid }}
     usermod -aG {{ zato_create_extra_user_02 }} zato
 
 - name: Create extra user and add Zato to its group 3 (02)
   when: zato_create_extra_user_03
   shell: |
-    useradd {{ zato_create_extra_user_03 }} || true
+    useradd {{ zato_create_extra_user_03 }}     \
+      --uid {{ zato_create_extra_user_03_uid }} \
+      --gid {{ zato_create_extra_user_03_gid }}
     usermod -aG {{ zato_create_extra_user_03 }} zato
 
 - name: Create extra user and add Zato to its group 4 (02)
   when: zato_create_extra_user_04
   shell: |
-    useradd {{ zato_create_extra_user_04 }} || true
+    useradd {{ zato_create_extra_user_04 }}     \
+      --uid {{ zato_create_extra_user_04_uid }} \
+      --gid {{ zato_create_extra_user_04_gid }}
     usermod -aG {{ zato_create_extra_user_04 }} zato
 
 - name: Create extra user and add Zato to its group 5 (02)
   when: zato_create_extra_user_05
   shell: |
-    useradd {{ zato_create_extra_user_05 }} || true
+    useradd {{ zato_create_extra_user_05 }}     \
+      --uid {{ zato_create_extra_user_05_uid }} \
+      --gid {{ zato_create_extra_user_05_gid }}
     usermod -aG {{ zato_create_extra_user_05 }} zato
 
 - name: Make sure any previous environment is deleted (02)
@@ -427,6 +437,8 @@
     echo ":set noincsearch" >> ~/.vimrc
     echo "export PATH=$PATH:~/current/bin" >> ~/.bashrc
     echo "source /usr/share/mc/bin/mc.sh" >> ~/.bashrc
+    echo "tail -f ~/env/qs-1/server1/logs/access.log" >> ~/.bash_history
+    echo "tail -f ~/env/qs-1/server1/logs/server.log" >> ~/.bash_history
     echo 'SELECTED_EDITOR="/usr/bin/vim.basic"' >> ~/.selected-editor
 
     echo "export PYTHONPATH=$PYTHONPATH:/opt/zato/current/extlib" >> ~/.bashrc
