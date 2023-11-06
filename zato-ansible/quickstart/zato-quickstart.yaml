@@ -50,12 +50,6 @@
 
     zato_install_playwright: "{{ Zato_Install_Playwright | default(False) }}"
 
-    zato_create_extra_user_01: "{{ Zato_Create_Extra_User_01 | default(False) }}"
-    zato_create_extra_user_02: "{{ Zato_Create_Extra_User_02 | default(False) }}"
-    zato_create_extra_user_03: "{{ Zato_Create_Extra_User_03 | default(False) }}"
-    zato_create_extra_user_04: "{{ Zato_Create_Extra_User_04 | default(False) }}"
-    zato_create_extra_user_05: "{{ Zato_Create_Extra_User_05 | default(False) }}"
-
     zato_ext_lib_dir: "{{ Zato_Extlib_Dir | default(False) }}"
     zato_map_ssh_dir: "{{ Zato_Map_SSH_Dir | default(False) }}"
     zato_install_binaries: "{{ Zato_Install_Binaries | default(True) }}"
@@ -120,6 +114,12 @@
         zato_firewall_limit_to_local_connections: "{{ Zato_Firewall_Limit_To_Local_Connections | default(False) }}"
 
         zato_hashicorp_vault_token: "{{ Zato_Hashicorp_Vault_Token | default(zato_hashicorp_vault_token) or zato_hashicorp_vault_token }}"
+
+        zato_create_extra_user_01: "{{ Zato_Create_Extra_User_01 | default(False) }}"
+        zato_create_extra_user_02: "{{ Zato_Create_Extra_User_02 | default(False) }}"
+        zato_create_extra_user_03: "{{ Zato_Create_Extra_User_03 | default(False) }}"
+        zato_create_extra_user_04: "{{ Zato_Create_Extra_User_04 | default(False) }}"
+        zato_create_extra_user_05: "{{ Zato_Create_Extra_User_05 | default(False) }}"
 
     - name: Run tasks 01 (init)
       when: zato_qs_run_01
