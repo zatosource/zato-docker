@@ -290,10 +290,10 @@
   shell: |
     usermod -u 1099 zato
     groupadd {{ zato_create_extra_user_01 }} \
-       --gid {{ zato_create_extra_user_01_gid }}
+       --gid {{ zato_create_extra_user_01_gid }} || true
     useradd {{ zato_create_extra_user_01 }}     \
       --uid {{ zato_create_extra_user_01_uid }} \
-      --gid {{ zato_create_extra_user_01_gid }}
+      --gid {{ zato_create_extra_user_01_gid }} || true
     usermod -aG {{ zato_create_extra_user_01 }} zato
 
 - name: Create extra user and add Zato to its group 2 (02)
@@ -301,10 +301,10 @@
   shell: |
     usermod -u 1099 zato
     groupadd {{ zato_create_extra_user_02 }} \
-       --gid {{ zato_create_extra_user_02_gid }}
+       --gid {{ zato_create_extra_user_02_gid }} || true
     useradd {{ zato_create_extra_user_02 }}     \
       --uid {{ zato_create_extra_user_02_uid }} \
-      --gid {{ zato_create_extra_user_02_gid }}
+      --gid {{ zato_create_extra_user_02_gid }} || true
     usermod -aG {{ zato_create_extra_user_02 }} zato
 
 - name: Create extra user and add Zato to its group 3 (02)
@@ -312,10 +312,10 @@
   shell: |
     usermod -u 1099 zato
     groupadd {{ zato_create_extra_user_03 }}
-       --gid {{ zato_create_extra_user_03_gid }}
+       --gid {{ zato_create_extra_user_03_gid }} || true
     useradd {{ zato_create_extra_user_03 }}     \
       --uid {{ zato_create_extra_user_03_uid }} \
-      --gid {{ zato_create_extra_user_03_gid }}
+      --gid {{ zato_create_extra_user_03_gid }} || true
     usermod -aG {{ zato_create_extra_user_03 }} zato
 
 - name: Create extra user and add Zato to its group 4 (02)
@@ -323,10 +323,10 @@
   shell: |
     usermod -u 1099 zato
     groupadd {{ zato_create_extra_user_04 }} \
-       --gid {{ zato_create_extra_user_04_gid }}
+       --gid {{ zato_create_extra_user_04_gid }} || true
     useradd {{ zato_create_extra_user_04 }}     \
       --uid {{ zato_create_extra_user_04_uid }} \
-      --gid {{ zato_create_extra_user_04_gid }}
+      --gid {{ zato_create_extra_user_04_gid }} || true
     usermod -aG {{ zato_create_extra_user_04` }} zato
 
 - name: Create extra user and add Zato to its group 5 (02)
@@ -334,10 +334,10 @@
   shell: |
     usermod -u 1099 zato
     groupadd {{ zato_create_extra_user_05 }} \
-       --gid {{ zato_create_extra_user_05_gid }}
+       --gid {{ zato_create_extra_user_05_gid }} || true
     useradd {{ zato_create_extra_user_05 }}     \
       --uid {{ zato_create_extra_user_05_uid }} \
-      --gid {{ zato_create_extra_user_05_gid }}
+      --gid {{ zato_create_extra_user_05_gid }} || true
     usermod -aG {{ zato_create_extra_user_05 }} zato
 
 - name: Make sure any previous environment is deleted (02)
