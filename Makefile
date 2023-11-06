@@ -15,7 +15,7 @@ QUICKSTART_IMAGE_DIR=$(CURDIR)/quickstart
 parent-build:
 	cp $(ZATO_ANSIBLE_QS_DIR)/* $(PARENT_IMAGE_DIR)
 	cd $(PARENT_IMAGE_DIR)
-	docker build --no-cache -t zato-$(ZATO_VERSION)-quickstart-parent $(PARENT_IMAGE_DIR)
+	DOCKER_BUILDKIT=1 docker build --no-cache -t zato-$(ZATO_VERSION)-quickstart-parent $(PARENT_IMAGE_DIR)
 	docker tag zato-$(ZATO_VERSION)-quickstart-parent:latest ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart-parent:latest
 	cd $(CURDIR)
 
@@ -31,7 +31,7 @@ parent-all:
 quickstart-build:
 	cp $(ZATO_ANSIBLE_QS_DIR)/* $(QUICKSTART_IMAGE_DIR)
 	cd $(QUICKSTART_IMAGE_DIR)
-	docker build --no-cache -t zato-$(ZATO_VERSION)-quickstart $(QUICKSTART_IMAGE_DIR)
+	DOCKER_BUILDKIT=1 docker build --no-cache -t zato-$(ZATO_VERSION)-quickstart $(QUICKSTART_IMAGE_DIR)
 	docker tag zato-$(ZATO_VERSION)-quickstart:latest ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart:latest
 	cd $(CURDIR)
 
