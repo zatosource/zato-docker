@@ -16,11 +16,11 @@ env_keys = [
     'Zato_Hot_Deploy_Dir',
     'Zato_User_Conf_Dir',
     'Zato_Extlib_Dir',
-    'Zato_Extra_User_1'
-    'Zato_Extra_User_2'
-    'Zato_Extra_User_3'
-    'Zato_Extra_User_4'
-    'Zato_Extra_User_5',
+    'Zato_Create_Extra_User_01'
+    'Zato_Create_Extra_User_02'
+    'Zato_Create_Extra_User_03'
+    'Zato_Create_Extra_User_04'
+    'Zato_Create_Extra_User_05',
     'Zato_Enmasse_File',
     'Zato_Cluster_Name',
     'Zato_ODB_Type',
