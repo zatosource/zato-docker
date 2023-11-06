@@ -288,6 +288,8 @@
 - name: Create extra user and add Zato to its group 1 (02)
   when: zato_create_extra_user_01
   shell: |
+    usermod -u 1099 zato
+    usermod -g 1099 zato
     groupadd {{ zato_create_extra_user_01 }}
        --gid {{ zato_create_extra_user_01_gid }}
     useradd {{ zato_create_extra_user_01 }}     \
@@ -298,6 +300,8 @@
 - name: Create extra user and add Zato to its group 2 (02)
   when: zato_create_extra_user_02
   shell: |
+    usermod -u 1099 zato
+    usermod -g 1099 zato
     groupadd {{ zato_create_extra_user_02 }}
        --gid {{ zato_create_extra_user_02_gid }}
     useradd {{ zato_create_extra_user_02 }}     \
@@ -308,6 +312,8 @@
 - name: Create extra user and add Zato to its group 3 (02)
   when: zato_create_extra_user_03
   shell: |
+    usermod -u 1099 zato
+    usermod -g 1099 zato
     groupadd {{ zato_create_extra_user_03 }}
        --gid {{ zato_create_extra_user_03_gid }}
     useradd {{ zato_create_extra_user_03 }}     \
@@ -318,6 +324,8 @@
 - name: Create extra user and add Zato to its group 4 (02)
   when: zato_create_extra_user_04
   shell: |
+    usermod -u 1099 zato
+    usermod -g 1099 zato
     groupadd {{ zato_create_extra_user_04 }}
        --gid {{ zato_create_extra_user_04_gid }}
     useradd {{ zato_create_extra_user_04 }}     \
@@ -328,6 +336,8 @@
 - name: Create extra user and add Zato to its group 5 (02)
   when: zato_create_extra_user_05
   shell: |
+    usermod -u 1099 zato
+    usermod -g 1099 zato
     groupadd {{ zato_create_extra_user_05 }}
        --gid {{ zato_create_extra_user_05_gid }}
     useradd {{ zato_create_extra_user_05 }}     \
