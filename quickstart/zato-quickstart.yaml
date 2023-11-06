@@ -121,6 +121,18 @@
         zato_create_extra_user_04: "{{ Zato_Create_Extra_User_04 | default(False) }}"
         zato_create_extra_user_05: "{{ Zato_Create_Extra_User_05 | default(False) }}"
 
+        zato_create_extra_user_01_gid: "{{ Zato_Create_Extra_User_01_GID | default(False) }}"
+        zato_create_extra_user_02_gid: "{{ Zato_Create_Extra_User_02_GID | default(False) }}"
+        zato_create_extra_user_03_gid: "{{ Zato_Create_Extra_User_03_GID | default(False) }}"
+        zato_create_extra_user_04_gid: "{{ Zato_Create_Extra_User_04_GID | default(False) }}"
+        zato_create_extra_user_05_gid: "{{ Zato_Create_Extra_User_05_GID | default(False) }}"
+
+        zato_create_extra_user_01_uid: "{{ Zato_Create_Extra_User_01_UID | default(False) }}"
+        zato_create_extra_user_02_uid: "{{ Zato_Create_Extra_User_02_UID | default(False) }}"
+        zato_create_extra_user_03_uid: "{{ Zato_Create_Extra_User_03_UID | default(False) }}"
+        zato_create_extra_user_04_uid: "{{ Zato_Create_Extra_User_04_UID | default(False) }}"
+        zato_create_extra_user_05_uid: "{{ Zato_Create_Extra_User_05_UID | default(False) }}"
+
     - name: Run tasks 01 (init)
       when: zato_qs_run_01
       import_tasks: zato-quickstart-01.yaml
