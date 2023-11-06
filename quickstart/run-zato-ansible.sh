@@ -25,7 +25,7 @@ env_keys = [
     'Zato_Create_Extra_User_02_GID',
     'Zato_Create_Extra_User_03_GID',
     'Zato_Create_Extra_User_04_GID',
-    'Zato_Create_Extra_User_05_GID'
+    'Zato_Create_Extra_User_05_GID',
     'Zato_Create_Extra_User_01_UID',
     'Zato_Create_Extra_User_02_UID',
     'Zato_Create_Extra_User_03_UID',
