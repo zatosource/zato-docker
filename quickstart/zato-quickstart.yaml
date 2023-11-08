@@ -38,7 +38,6 @@
 
     zato_async_timeout: "{{ 3600 * 24 * 365 * 100 }}" # 1 hour (in seconds) * 24 hours * 365 days * 100 years
 
-    zato_run_internal_tests: "{{ Zato_Run_Internal_Tests | default(False) }}"
     zato_has_python_reqs_in_tmp: "{{ Zato_Has_Python_Reqs_In_Tmp | default(False) }}"
     zato_firewall_limit_to_local_connections: "{{ Zato_Firewall_Limit_To_Local_Connections | default(False) }}"
 
@@ -132,6 +131,8 @@
         zato_create_extra_user_03_uid: "{{ Zato_Create_Extra_User_03_UID | default(False) }}"
         zato_create_extra_user_04_uid: "{{ Zato_Create_Extra_User_04_UID | default(False) }}"
         zato_create_extra_user_05_uid: "{{ Zato_Create_Extra_User_05_UID | default(False) }}"
+
+        zato_run_internal_tests: "{{ Zato_Run_Internal_Tests | default(False) }}"
 
     - name: Run tasks 01 (init)
       when: zato_qs_run_01
