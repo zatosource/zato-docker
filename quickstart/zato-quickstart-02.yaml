@@ -447,8 +447,8 @@
     echo ":set noincsearch" >> ~/.vimrc
     echo "export PATH=$PATH:~/current/bin" >> ~/.bashrc
     echo "source /usr/share/mc/bin/mc.sh" >> ~/.bashrc
-    echo "tail -f ~/env/qs-1/server1/logs/access.log" >> ~/.bash_history
-    echo "tail -f ~/env/qs-1/server1/logs/server.log" >> ~/.bash_history
+    echo "tail -f -n 500 ~/env/qs-1/server1/logs/access.log" >> ~/.bash_history
+    echo "tail -f -n 500 ~/env/qs-1/server1/logs/server.log" >> ~/.bash_history
     echo 'SELECTED_EDITOR="/usr/bin/vim.basic"' >> ~/.selected-editor
 
     echo "export PYTHONPATH=$PYTHONPATH:/opt/zato/current/extlib" >> ~/.bashrc
