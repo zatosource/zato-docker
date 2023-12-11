@@ -8,15 +8,20 @@ from json import dumps
 # The list of environment variables that we recognize
 # and that can be passed to the underlying Ansible playbook.
 env_keys = [
-    'Zato_SSH_Password',
+
+    'Zato_Build_Verbosity',
+    'Zato_Startup_Verbosity',
+
     'Zato_Dashboard_Password',
     'Zato_Dashboard_Session_Timeout',
     'Zato_IDE_Password',
     'Zato_Is_Quickstart',
+
     'Zato_Python_Reqs',
     'Zato_Hot_Deploy_Dir',
     'Zato_User_Conf_Dir',
     'Zato_Extlib_Dir',
+
     'Zato_Create_Extra_User_01',
     'Zato_Create_Extra_User_02',
     'Zato_Create_Extra_User_03',
@@ -32,7 +37,9 @@ env_keys = [
     'Zato_Create_Extra_User_03_UID',
     'Zato_Create_Extra_User_04_UID',
     'Zato_Create_Extra_User_05_UID',
+
     'Zato_Enmasse_File',
+
     'Zato_Cluster_Name',
     'Zato_ODB_Type',
     'Zato_ODB_Hostname',
@@ -41,20 +48,27 @@ env_keys = [
     'Zato_ODB_Username',
     'Zato_ODB_Password',
     'Zato_IP_Address',
+
     'Zato_Host_Dashboard_Port',
     'Zato_Host_Server_Port',
     'Zato_Host_LB_Port',
     'Zato_Host_Database_Port',
     'Zato_Host_SSH_Port',
+
+    'Zato_Log_Env_Details',
+
     'Zato_Run_Internal_Tests',
     'Zato_Run_Quickstart_Step_01',
     'Zato_Run_Quickstart_Step_02',
+
     'Zato_Server_Ping_On_Startup',
     'Zato_Server_Ping_On_Startup_Request',
     'Zato_Server_Ping_With_Interval',
     'Zato_Server_Ping_With_Interval_Request',
+
     'Zato_Server_Threads',
-    'Zato_Server_TLS_Verify',
+    'Zato_TLS_Verify',
+
     'Zato_Stop_Server_After',
 ]
 
@@ -95,7 +109,7 @@ for prev_name, current_name in env_keys_prev.items():
 #
 
 # Optionally, make Ansible output in a verbose mode
-build_verbosity = os.environ.get('Zato_Build_Verbosity') or ''
+build_verbosity = os.environ.get('Zato_Build_Verbosity') or os.environ.get('Zato_Startup_Verbosity') ''
 
 # Turn the dictionary of parameters into a JSON document expected by Ansible.
 env_values = dumps(env_values)

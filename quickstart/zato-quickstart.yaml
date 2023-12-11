@@ -133,6 +133,8 @@
         zato_create_extra_user_05_uid: "{{ Zato_Create_Extra_User_05_UID | default(False) }}"
 
         zato_is_quickstart: "{{ Zato_Is_Quickstart | default(False) }}"
+        zato_log_env_details: "{{ Zato_Log_Env_Details | default(False) }}"
+        zato_tls_verify: "{{ Zato_TLS_Verify | default(True) }}"
         zato_run_internal_tests: "{{ Zato_Run_Internal_Tests | default(False) }}"
 
     - name: Run tasks 01 (init)

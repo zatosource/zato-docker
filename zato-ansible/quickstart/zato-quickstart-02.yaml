@@ -454,6 +454,8 @@
     echo "export PYTHONPATH=$PYTHONPATH:/opt/zato/current/extlib" >> ~/.bashrc
     echo "export ZATO_HOT_DEPLOY_DIR=/opt/hot-deploy/services" >> ~/.bashrc
     echo "export Zato_Is_Quickstart={{ zato_is_quickstart }}" >> ~/.bashrc
+    echo "export Zato_Log_Env_Details={{ zato_log_env_details }}" >> ~/.bashrc
+    echo "export Zato_TLS_Verify={{ zato_tls_verify }}" >> ~/.bashrc
     echo "export ZATO_USER_CONF_DIR=/opt/hot-deploy/user-conf:/tmp/zato-user-conf" >> ~/.bashrc
     echo "export ZATO_HOT_DEPLOY_PREFER_SNAPSHOTS={{ zato_hot_deploy_prefer_snapshots }}" >> ~/.bashrc
 
