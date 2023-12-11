@@ -109,7 +109,7 @@ for prev_name, current_name in env_keys_prev.items():
 #
 
 # Optionally, make Ansible output in a verbose mode
-build_verbosity = os.environ.get('Zato_Build_Verbosity') or os.environ.get('Zato_Startup_Verbosity') ''
+build_verbosity = os.environ.get('Zato_Build_Verbosity') or os.environ.get('Zato_Startup_Verbosity') or ''
 
 # Turn the dictionary of parameters into a JSON document expected by Ansible.
 env_values = dumps(env_values)
