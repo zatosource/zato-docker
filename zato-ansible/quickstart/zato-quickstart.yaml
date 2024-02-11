@@ -9,6 +9,7 @@
     zato_tests_base_dir: "~/{{ zato_version }}.0"
 
     zato_env_path: "/opt/zato/env/qs-1"
+    zato_password: "{{ lookup('password') }}"
 
     zato_db_main: "zato_db_main1"
     zato_db_pubsub: "zato_db_pubsub1"
@@ -98,9 +99,9 @@
 
         zato_python_reqs: "{{ zato_python_reqs_tmp if zato_has_python_reqs_in_tmp else zato_python_reqs_opt }}"
 
-        zato_ssh_user_password: "{{ (lookup('password') or Zato_SSH_Password) | default(zato_ssh_user_password) or zato_ssh_user_password }}"
-        zato_ide_publisher_password: "{{ (lookup('password') or Zato_IDE_Password) | default(zato_ide_publisher_password) or zato_ide_publisher_password }}"
-        zato_dashboard_admin_password: "{{ (lookup('password') or Zato_Dashboard_Password) | default(zato_dashboard_admin_password) or zato_dashboard_admin_password }}"
+        zato_ssh_user_password: "{{ zato_password or Zato_SSH_Password | default(zato_ssh_user_password) or zato_ssh_user_password }}"
+        zato_ide_publisher_password: "{{ zato_password or Zato_IDE_Password | default(zato_ide_publisher_password) or zato_ide_publisher_password }}"
+        zato_dashboard_admin_password: "{{ zato_password or Zato_Dashboard_Password | default(zato_dashboard_admin_password) or zato_dashboard_admin_password }}"
 
         zato_db_password_main: "{{ Zato_ODB_Password | default(zato_db_password_main) or zato_db_password_main }}"
         zato_db_password_pubsub: "{{ Zato_ODB_Password | default(zato_db_password_pubsub) or zato_db_password_pubsub }}"
