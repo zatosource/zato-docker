@@ -111,7 +111,7 @@
 
         zato_cluster_name: "{{ Zato_Cluster_Name | default('cluster1') }}"
 
-        zato_root_level_user: "{{ password | Zato_Root_Level_User | default(None) }}"
+        zato_root_level_user: "{{ Zato_Root_Level_User | default(None) }}"
         zato_hot_deploy_prefer_snapshots: "{{ Zato_Hot_Deploy_Prefer_Snapshots | default(True) }}"
         zato_firewall_limit_to_local_connections: "{{ Zato_Firewall_Limit_To_Local_Connections | default(False) }}"
 
