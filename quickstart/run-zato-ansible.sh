@@ -9,7 +9,7 @@ from json import dumps
 # and that can be passed to the underlying Ansible playbook.
 env_keys = [
 
-    'password',
+    'Zato_Password',
 
     'Zato_Build_Verbosity',
     'Zato_Startup_Verbosity',

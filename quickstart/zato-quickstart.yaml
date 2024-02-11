@@ -9,7 +9,7 @@
     zato_tests_base_dir: "~/{{ zato_version }}.0"
 
     zato_env_path: "/opt/zato/env/qs-1"
-    zato_password: "{{ lookup('password') }}"
+    zato_password: "{{ lookup('Zato_Password') }}"
 
     zato_db_main: "zato_db_main1"
     zato_db_pubsub: "zato_db_pubsub1"
