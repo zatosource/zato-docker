@@ -261,7 +261,7 @@
 - name: Set the SSH password for user 'zato' (02)
   user:
     name: zato
-    password: "{{ zato_password or zato_ssh_user_password or password_hash('sha512') }}"
+    password: "{{ zato_password or zato_ssh_user_password | password_hash('sha512') }}"
 
 - name: Install HashiCorp Vault (02)
   when: zato_use_hashicorp_vault
@@ -398,13 +398,13 @@
     dest: ~/env/details/all-zato-env-details.json
 
 - name: Save SSH credentials (02)
-  local_action: copy content="{{ zato_ssh_user_password }}" dest={{ zato_ssh_user_password_file }}
+  local_action: copy content="{{ zato_password or zato_ssh_user_password }}" dest={{ zato_ssh_user_password_file }}
 
 - name: Save Dashboard credentials (02)
-  local_action: copy content="{{ zato_dashboard_admin_password }}" dest={{ zato_dashboard_admin_password_file }}
+  local_action: copy content="{{ zato_password or zato_dashboard_admin_password }}" dest={{ zato_dashboard_admin_password_file }}
 
 - name: Save IDE credentials
-  local_action: copy content="{{ zato_ide_publisher_password }}" dest={{ zato_ide_publisher_password_file }}
+  local_action: copy content="{{ zato_password or zato_ide_publisher_password }}" dest={{ zato_ide_publisher_password_file }}
 
 - name: Save database user's credentials (main) (02)
   local_action: copy content="{{ zato_db_password_main }}" dest={{ zato_db_password_main_file }}
