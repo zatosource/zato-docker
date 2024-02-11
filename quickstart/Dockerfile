@@ -25,15 +25,6 @@ ENV Zato_Run_Quickstart_Step_02=true
 # Dashboard
 EXPOSE 8183
 
-# Load-balancer
-EXPOSE 11223
-
-# Load-balancer's agent
-EXPOSE 20151
-
-# Scheduler
-EXPOSE 31530
-
 # Server
 EXPOSE 17010
 
