@@ -44,7 +44,7 @@ quickstart-all:
 	$(MAKE) quickstart-push
 
 all-build-push:
-	~/clean.sh
+	~/clean.sh || true
 	$(MAKE) parent-all
 	$(MAKE) quickstart-all
 	$(MAKE) dockerhub-push
