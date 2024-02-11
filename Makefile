@@ -34,25 +34,22 @@ quickstart-build:
 	docker tag zato-$(ZATO_VERSION)-quickstart:latest ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart:latest
 	cd $(CURDIR)
 
-quickstart-push:
-	echo $(ZATO_GHCR_TOKEN) | docker login ghcr.io -u $(ZATO_GHCR_USER) --password-stdin
-	docker push ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart:latest
-	cd $(CURDIR)
-
-quickstart-all:
-	$(MAKE) quickstart-build
-	$(MAKE) quickstart-push
-
-all-build-push:
-	~/clean.sh || true
-	$(MAKE) parent-all
-	$(MAKE) quickstart-all
-	$(MAKE) dockerhub-push
-
 dockerhub-push:
 	echo $(ZATO_DOCKER_HUB_TOKEN) | docker login -u $(ZATO_DOCKER_HUB_USER) --password-stdin
 	docker tag zato-$(ZATO_VERSION)-quickstart zatosource/zato-$(ZATO_VERSION)-quickstart
 	docker push zatosource/zato-$(ZATO_VERSION)-quickstart
+
+github-push:
+	echo $(ZATO_GHCR_TOKEN) | docker login ghcr.io -u $(ZATO_GHCR_USER) --password-stdin
+	docker push ghcr.io/zatosource/zato-$(ZATO_VERSION)-quickstart:latest
+	cd $(CURDIR)
+
+all-build-push:
+	~/clean.sh || true
+	$(MAKE) parent-all
+	$(MAKE) quickstart-build
+	$(MAKE) dockerhub-push
+	$(MAKE) github-push
 
 echo:
 	echo Hello from zato-docker
