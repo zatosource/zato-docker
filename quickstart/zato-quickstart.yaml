@@ -9,7 +9,6 @@
     zato_tests_base_dir: "~/{{ zato_version }}.0"
 
     zato_env_path: "/opt/zato/env/qs-1"
-    zato_password: "{{ lookup('Zato_Password') }}"
 
     zato_db_main: "zato_db_main1"
     zato_db_pubsub: "zato_db_pubsub1"
@@ -98,6 +97,7 @@
     - name: Set facts (init)
       set_fact:
 
+        zato_password: "{{ Zato_Password }}"
         zato_python_reqs: "{{ zato_python_reqs_tmp if zato_has_python_reqs_in_tmp else zato_python_reqs_opt }}"
 
         zato_ssh_user_password: "{{ Zato_SSH_Password | default(zato_ssh_user_password) or zato_ssh_user_password }}"
