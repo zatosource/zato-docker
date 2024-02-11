@@ -97,7 +97,7 @@
     - name: Set facts (init)
       set_fact:
 
-        zato_password: "{{ lookup('Zato_Password', '') }}"
+        zato_password: "{{ lookup('env', 'Zato_Password') | default('', True) }}"
         zato_python_reqs: "{{ zato_python_reqs_tmp if zato_has_python_reqs_in_tmp else zato_python_reqs_opt }}"
 
         zato_ssh_user_password: "{{ Zato_SSH_Password | default(zato_ssh_user_password) or zato_ssh_user_password }}"
