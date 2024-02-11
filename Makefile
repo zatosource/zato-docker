@@ -1,4 +1,3 @@
-
 .PHONY: build
 MAKEFLAGS += --silent
 
@@ -45,8 +44,15 @@ quickstart-all:
 	$(MAKE) quickstart-push
 
 all-build-push:
+	~/clean.sh
 	$(MAKE) parent-all
 	$(MAKE) quickstart-all
+	$(MAKE) dockerhub-push
+
+dockerhub-push:
+	echo $(ZATO_DOCKER_HUB_TOKEN) | docker login -u $(ZATO_DOCKER_HUB_USER) --password-stdin
+	docker tag zato-$(ZATO_VERSION)-quickstart zatosource/zato-$(ZATO_VERSION)-quickstart
+	docker push zatosource/zato-$(ZATO_VERSION)-quickstart
 
 echo:
 	echo Hello from zato-docker
