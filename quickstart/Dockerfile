@@ -22,5 +22,40 @@ RUN mkdir -p /opt/hot-deploy/python-reqs/ && \
 # Signal to Ansible that it should provision a new environment
 ENV Zato_Run_Quickstart_Step_02=true
 
+# Dashboard
+EXPOSE 8183
+EXPOSE 8184
+EXPOSE 8185
+EXPOSE 8186
+EXPOSE 8187
+
+# Load-balancer
+EXPOSE 11223
+EXPOSE 11224
+EXPOSE 11225
+EXPOSE 11226
+EXPOSE 11227
+
+# Load-balancer's agent
+EXPOSE 20151
+EXPOSE 20152
+EXPOSE 20153
+EXPOSE 20154
+EXPOSE 20155
+
+# Scheduler
+EXPOSE 31530
+EXPOSE 31531
+EXPOSE 31532
+EXPOSE 31533
+EXPOSE 31534
+
+# Server
+EXPOSE 17010
+EXPOSE 17011
+EXPOSE 17012
+EXPOSE 17013
+EXPOSE 17014
+
 # Run Ansible provisioning when we start up (step 02)
 ENTRYPOINT ["/zato-ansible/run-zato-ansible.sh"]
