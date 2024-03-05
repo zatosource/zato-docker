@@ -28,5 +28,8 @@ EXPOSE 8183
 # Server
 EXPOSE 17010
 
+# SSH
+EXPOSE 22
+
 # Run Ansible provisioning when we start up (step 02)
 ENTRYPOINT ["/zato-ansible/run-zato-ansible.sh"]
