@@ -1,10 +1,4 @@
 
-- name: Update and upgrade apt packages (02)
-  apt:
-    upgrade: yes
-    update_cache: yes
-    cache_valid_time: 3600
-
 - name: Install NodeJS (for testing) (02)
   when: zato_run_internal_tests or zato_install_playwright
   shell: |
