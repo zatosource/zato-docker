@@ -521,6 +521,14 @@
   shell: |
     chown -R zato:zato /opt/zato
 
+- name: Start the quickstart environment (scheduler) (02)
+  become: true
+  become_user: "zato"
+  shell: |
+    ~/env/qs-1/start-scheduler-fg.sh
+  async: "{{ zato_async_timeout }}"
+  poll: 0
+
 - name: Start the quickstart environment (server) (02)
   become: true
   become_user: "zato"
@@ -542,14 +550,6 @@
   become_user: "zato"
   shell: |
     ~/env/qs-1/start-load-balancer-fg.sh
-  async: "{{ zato_async_timeout }}"
-  poll: 0
-
-- name: Start the quickstart environment (scheduler) (02)
-  become: true
-  become_user: "zato"
-  shell: |
-    ~/env/qs-1/start-scheduler-fg.sh
   async: "{{ zato_async_timeout }}"
   poll: 0
 
