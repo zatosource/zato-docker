@@ -346,7 +346,7 @@
     PATH=$PATH:~/current/bin &&
     {{ zato_env_path }}/zato-qs-stop.sh || true &&
     rm -rf {{ zato_env_path }} &&
-    zato quickstart \
+    Zato_Server_To_Scheduler_Use_TLS=False zato quickstart \
         {{ zato_env_path }} \
         --odb-type {{ zato_db_type }} \
         --odb-host {{ zato_db_host }} \
