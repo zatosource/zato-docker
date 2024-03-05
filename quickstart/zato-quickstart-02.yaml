@@ -614,14 +614,6 @@
   shell: |
     ~/current/bin/zato enmasse {{ zato_env_path }}/server1 --import --input /tmp/enmasse.yaml --env-file /tmp/env.ini --replace-odb-objects --exit-on-missing-file --verbose
 
-- name: Restart the server after enmasse
-  become: true
-  become_user: "zato"
-  shell: |
-    pkill -f zato.server.main && pkill -f gunicorn && ~/env/qs-1/start-server-fg.sh
-  async: "{{ zato_async_timeout }}"
-  poll: 0
-
 - name: Run the post-install script (02)
   when: zato_post_install_script
   become: true
