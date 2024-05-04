@@ -24,13 +24,14 @@
   shell: |
     rm -rf /var/crash/*
 
-- name: Make sure that PostgreSQL is started (02)
+- name: Run base scripts (02)
   when: zato_use_postgresql
   shell: |
-    DEBIAN_FRONTEND=noninteractive service postgresql restart
 
-- name: Make sure that Redis is started (02)
-  shell: |
+    # Make sure that PostgreSQL is started
+    DEBIAN_FRONTEND=noninteractive service postgresql restart &&
+
+    # Make sure that Redis is started
     DEBIAN_FRONTEND=noninteractive service redis-server restart
 
 - name: Regenerate host SSH keys (02)
