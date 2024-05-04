@@ -34,17 +34,17 @@
   shell: |
     DEBIAN_FRONTEND=noninteractive service mysql restart
 
-- name: Make sure that Redis is started (02)
+- name: Run base scripts (02)
   shell: |
+
+    # Make sure that Redis is started (02)
     DEBIAN_FRONTEND=noninteractive service redis-server restart
 
-- name: Regenerate host SSH keys (02)
-  shell: |
+    # Regenerate host SSH keys (02)
     rm -v /etc/ssh/ssh_host_*
     DEBIAN_FRONTEND=noninteractive dpkg-reconfigure openssh-server
 
-- name: Restart the SSH server after regenerating its keys (02)
-  shell: |
+    # Restart the SSH server after regenerating its keys (02)
     DEBIAN_FRONTEND=noninteractive service ssh restart
 
 - name: Drop the SQL database if it exists (PG -> main) (02)
@@ -425,16 +425,11 @@
     chmod 400 /opt/zato/.ssh/*
     chmod 700 /opt/zato/.ssh
 
-- name: Ensure scripts exist (zato) (02)
-  become: true
-  become_user: "zato"
-  shell: |
-    echo "" >> ~/.bashrc_zato
-
 - name: Set Bash defaults (zato) (02)
   become: true
   become_user: "zato"
   shell: |
+    echo "" >> ~/.bashrc_zato
     echo ":set tabstop=4" >> ~/.vimrc
     echo ":set shiftwidth=4" >> ~/.vimrc
     echo ":set expandtab" >> ~/.vimrc
