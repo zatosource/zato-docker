@@ -43,7 +43,6 @@
     zato_qs_run_01: "{{ Zato_Run_Quickstart_Step_01 | default(False) }}"
     zato_qs_run_02: "{{ Zato_Run_Quickstart_Step_02 | default(False) }}"
 
-    zato_use_mysql: "{{ Zato_Use_MySQL | default(True) }}"
     zato_use_postgresql: "{{ Zato_Use_PostgreSQL | default(True) }}"
 
     zato_install_playwright: "{{ Zato_Install_Playwright | default(False) }}"
