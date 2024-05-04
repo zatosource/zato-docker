@@ -29,17 +29,22 @@
   shell: |
     DEBIAN_FRONTEND=noninteractive service postgresql restart
 
-- name: Run base scripts (02)
+- name: Make sure that MySQL is started (02)
+  when: zato_use_mysql
   shell: |
+    DEBIAN_FRONTEND=noninteractive service mysql restart
 
-    # Make sure that Redis is started
+- name: Make sure that Redis is started (02)
+  shell: |
     DEBIAN_FRONTEND=noninteractive service redis-server restart
 
-    # Regenerate host SSH keys
+- name: Regenerate host SSH keys (02)
+  shell: |
     rm -v /etc/ssh/ssh_host_*
     DEBIAN_FRONTEND=noninteractive dpkg-reconfigure openssh-server
 
-    # Restart the SSH server after regenerating its keys
+- name: Restart the SSH server after regenerating its keys (02)
+  shell: |
     DEBIAN_FRONTEND=noninteractive service ssh restart
 
 - name: Drop the SQL database if it exists (PG -> main) (02)
@@ -51,11 +56,27 @@
     force: "yes"
     name: "{{ zato_db_main }}"
 
+- name: Drop the SQL database if it exists (MySQL -> main) (02)
+  when: zato_use_mysql
+  community.mysql.mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: absent
+    force: "yes"
+    name: "{{ zato_db_main }}"
+
 - name: Drop the SQL database if it exists (PG -> pub/sub) (02)
   when: zato_use_postgresql
   become: true
   become_user: "postgres"
   community.postgresql.postgresql_db:
+    state: absent
+    force: "yes"
+    name: "{{ zato_db_pubsub }}"
+
+- name: Drop the SQL database if it exists (MySQL -> pub/sub) (02)
+  when: zato_use_mysql
+  community.mysql.mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
     state: absent
     force: "yes"
     name: "{{ zato_db_pubsub }}"
@@ -72,6 +93,14 @@
     template: template0
     name: "{{ zato_db_main }}"
 
+- name: Create the SQL database (MySQL -> main) (02)
+  when: zato_use_mysql
+  community.mysql.mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: present
+    force: "yes"
+    name: "{{ zato_db_main }}"
+
 - name: Create the SQL database (PG -> pub/sub) (02)
   when: zato_use_postgresql
   become: true
@@ -84,6 +113,14 @@
     template: template0
     name: "{{ zato_db_pubsub }}"
 
+- name: Create the SQL database (MySQL -> pub/sub) (02)
+  when: zato_use_mysql
+  community.mysql.mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: present
+    force: "yes"
+    name: "{{ zato_db_pubsub }}"
+
 - name: Drop the SQL user if it exists (PG -> main) (02)
   when: zato_use_postgresql
   become: true
@@ -93,6 +130,13 @@
     fail_on_user: "no"
     name: "{{ zato_db_username_main }}"
 
+- name: Drop the SQL user if it exists (MySQL -> main) (02)
+  when: zato_use_mysql
+  community.mysql.mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: absent
+    name: "{{ zato_db_username_main }}"
+
 - name: Drop the SQL user if it exists (PG -> pub/sub) (02)
   when: zato_use_postgresql
   become: true
@@ -100,6 +144,13 @@
   community.postgresql.postgresql_user:
     state: absent
     fail_on_user: "no"
+    name: "{{ zato_db_username_pubsub }}"
+
+- name: Drop the SQL user if it exists (MySQL -> pub/sub) (02)
+  when: zato_use_mysql
+  community.mysql.mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: absent
     name: "{{ zato_db_username_pubsub }}"
 
 - name: Create the SQL user (PG -> main) (02)
@@ -115,6 +166,15 @@
     priv: "ALL"
     comment: "Main Zato user for PostgreSQL"
 
+- name: Create the SQL user (MySQL -> main) (02)
+  when: zato_use_mysql
+  community.mysql.mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: present
+    name: "{{ zato_db_username_main }}"
+    password: "{{ zato_db_password_main }}"
+    priv: '*.*:ALL,GRANT'
+
 - name: Create the SQL user (PG -> pub/sub) (02)
   when: zato_use_postgresql
   become: true
@@ -127,6 +187,15 @@
     encrypted: "yes"
     priv: "ALL"
     comment: "Zato publish/subscribe user for PostgreSQL"
+
+- name: Create the SQL user (MySQL -> pub/sub) (02)
+  when: zato_use_mysql
+  community.mysql.mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: present
+    name: "{{ zato_db_username_pubsub }}"
+    password: "{{ zato_db_password_pubsub }}"
+    priv: '*.*:ALL,GRANT'
 
 - name: Grant access to the SQL user (PG -> main) (02)
   when: zato_use_postgresql
@@ -174,6 +243,11 @@
   shell: |
     DEBIAN_FRONTEND=noninteractive service postgresql restart
 
+- name: Restart MySQL after its configuration was changed (02)
+  when: zato_use_mysql
+  shell: |
+    DEBIAN_FRONTEND=noninteractive service mysql restart
+
 - name: Restart the SSH server after its configuration was changed (02)
   shell: |
     DEBIAN_FRONTEND=noninteractive service ssh restart
@@ -182,6 +256,28 @@
   user:
     name: zato
     password: "{{ zato_password or zato_ssh_user_password | password_hash('sha512') }}"
+
+- name: Install HashiCorp Vault (02)
+  when: zato_use_hashicorp_vault
+  become: true
+  become_user: "root"
+  shell: |
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+    apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    apt-get update && apt-get install vault
+
+- name: Make sure all the previous processes started by user zato are stopped (02)
+  shell: |
+    pkill --signal 9 -u zato || true
+
+- name: Start HashiCorp Vault (dev) (02)
+  when: zato_use_hashicorp_vault
+  become: true
+  become_user: "zato"
+  shell: |
+    /usr/bin/vault server -dev -dev-root-token-id={{ zato_hashicorp_vault_token }}
+  async: "{{ zato_async_timeout }}"
+  poll: 0
 
 - name: Create extra user and add Zato to its group 1 (02)
   when: zato_create_extra_user_01
@@ -329,11 +425,16 @@
     chmod 400 /opt/zato/.ssh/*
     chmod 700 /opt/zato/.ssh
 
-- name: Set Bash defaults (zato) (02)
+- name: Ensure scripts exist (zato) (02)
   become: true
   become_user: "zato"
   shell: |
     echo "" >> ~/.bashrc_zato
+
+- name: Set Bash defaults (zato) (02)
+  become: true
+  become_user: "zato"
+  shell: |
     echo ":set tabstop=4" >> ~/.vimrc
     echo ":set shiftwidth=4" >> ~/.vimrc
     echo ":set expandtab" >> ~/.vimrc
@@ -379,19 +480,20 @@
     echo "sudo su - zato" >> ~{{ zato_root_level_user }}/.bash_history
     echo 'SELECTED_EDITOR="/usr/bin/vim.basic"' >> ~{{ zato_root_level_user }}/.selected-editor
 
-- name: Prepare components (02)
+- name: Prepare default hot-deployment directories (02)
   become: true
   become_user: "root"
   shell: |
-
-    # Prepare default hot-deployment directories (02)
     mkdir -p /opt/hot-deploy/python-reqs
     mkdir -p /opt/hot-deploy/services
     mkdir -p /opt/hot-deploy/user-conf
     mkdir -p /opt/hot-deploy/enmasse
     chown -R zato:zato /opt/hot-deploy
 
-    # Prepare per-component startup scripts
+- name: Prepare per-component startup scripts (02)
+  become: true
+  become_user: "root"
+  shell: |
     echo "{{ zato_start_preamble }}" > {{ zato_env_path }}/start-server-fg.sh
     echo "~/current/bin/zato start {{ zato_env_path }}/server1 --fg --env-file /opt/hot-deploy/enmasse/env.ini" >> {{ zato_env_path }}/start-server-fg.sh
 
@@ -407,16 +509,16 @@
     chown zato:zato {{ zato_env_path }}/start-*.sh
     chmod 764 {{ zato_env_path }}/start-*.sh
 
-- name: Prepare extlib (02)
+- name: Set extlib structure (02)
   when: zato_ext_lib_dir
   shell: |
-
-    # Set extlib structure
     chown -R zato:zato /opt/zato
     rm -rf /opt/zato/current/extlib
     ln -s /tmp/zato-extlib /opt/zato/current/extlib
 
-    # Set filesystem permissions
+- name: Set filesystem permissions (02)
+  when: zato_ext_lib_dir
+  shell: |
     chown -R zato:zato /opt/zato
 
 - name: Start the quickstart environment (scheduler) (02)
@@ -465,25 +567,33 @@
   uri:
     url: http://127.0.0.1:11223/zato/ping
 
-- name: Run internal post-startup scripts (02)
+- name: Set Dashboard password (02)
   become: true
   become_user: "zato"
   shell: |
-
-    # Set Dashboard password
     ~/current/bin/zato update password {{ zato_env_path }}/web-admin admin --password "{{ zato_password or zato_dashboard_admin_password }}" --verbose
 
-    # Set IDE password
+- name: Set IDE password (02)
+  become: true
+  become_user: "zato"
+  shell: |
     ~/current/bin/zato set-ide-password {{ zato_env_path }}/server1 --password "{{ zato_password or zato_ide_publisher_password }}" --verbose
 
-    # Make sure the directory for config files exists
+- name: Make sure the directory for config files exists (02)
+  become: true
+  become_user: "zato"
+  shell: |
     mkdir -p /tmp/zato-user-conf/
 
-    # Make sure config files are owned by user zato
+- name: Make sure config files are owned by user zato (02)
+  shell: |
     chown -R zato:zato /opt/hot-deploy/user-conf/
     chown -R zato:zato /tmp/zato-user-conf/
 
-    # Make sure config files are deployed (02)
+- name: Make sure config files are deployed (02)
+  become: true
+  become_user: "zato"
+  shell: |
     touch -c /opt/hot-deploy/user-conf/*
     touch -c /tmp/zato-user-conf/*
 
@@ -492,15 +602,16 @@
   shell: |
     /usr/bin/bash /tmp/zato-pre-enmasse-script.sh
 
-- name: Run enmasse (02)
+- name: Run enmasse -> /opt (02)
   become: true
   become_user: "zato"
   shell: |
-
-    # Run enmasse -> /opt
     ~/current/bin/zato enmasse {{ zato_env_path }}/server1 --import --input /opt/hot-deploy/enmasse/enmasse.yaml --env-file /opt/hot-deploy/enmasse/env.ini --replace-odb-objects --exit-on-missing-file --verbose
 
-    # Run enmasse -> /tmp
+- name: Run enmasse -> /tmp (02)
+  become: true
+  become_user: "zato"
+  shell: |
     ~/current/bin/zato enmasse {{ zato_env_path }}/server1 --import --input /tmp/enmasse.yaml --env-file /tmp/env.ini --replace-odb-objects --exit-on-missing-file --verbose
 
 - name: Run the post-install script (02)
