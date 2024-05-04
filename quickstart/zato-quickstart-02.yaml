@@ -24,23 +24,21 @@
   shell: |
     rm -rf /var/crash/*
 
-- name: Run base scripts (02)
+- name: Make sure that PostgreSQL is started (02)
   when: zato_use_postgresql
   shell: |
+    DEBIAN_FRONTEND=noninteractive service postgresql restart
 
-    # Make sure that PostgreSQL is started
-    DEBIAN_FRONTEND=noninteractive service postgresql restart &&
-
+- name: Run base scripts (02)
+  shell: |
     # Make sure that Redis is started
     DEBIAN_FRONTEND=noninteractive service redis-server restart
 
-- name: Regenerate host SSH keys (02)
-  shell: |
+    # Regenerate host SSH keys
     rm -v /etc/ssh/ssh_host_*
     DEBIAN_FRONTEND=noninteractive dpkg-reconfigure openssh-server
 
-- name: Restart the SSH server after regenerating its keys (02)
-  shell: |
+    # Restart the SSH server after regenerating its keys
     DEBIAN_FRONTEND=noninteractive service ssh restart
 
 - name: Drop the SQL database if it exists (PG -> main) (02)
