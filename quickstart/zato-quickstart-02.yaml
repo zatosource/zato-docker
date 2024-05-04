@@ -182,27 +182,9 @@
     name: zato
     password: "{{ zato_password or zato_ssh_user_password | password_hash('sha512') }}"
 
-- name: Install HashiCorp Vault (02)
-  when: zato_use_hashicorp_vault
-  become: true
-  become_user: "root"
-  shell: |
-    curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
-    apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-    apt-get update && apt-get install vault
-
 - name: Make sure all the previous processes started by user zato are stopped (02)
   shell: |
     pkill --signal 9 -u zato || true
-
-- name: Start HashiCorp Vault (dev) (02)
-  when: zato_use_hashicorp_vault
-  become: true
-  become_user: "zato"
-  shell: |
-    /usr/bin/vault server -dev -dev-root-token-id={{ zato_hashicorp_vault_token }}
-  async: "{{ zato_async_timeout }}"
-  poll: 0
 
 - name: Create extra user and add Zato to its group 1 (02)
   when: zato_create_extra_user_01
