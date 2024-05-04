@@ -17,6 +17,7 @@ copy-ansible-scripts:
 	cp $(Quickstart_Image_Dir)/zato-quickstart-02.yaml $(Zato_Ansible_QS_Dir)/zato-quickstart-02.yaml
 
 parent-build:
+	$(MAKE) copy-ansible-scripts
 	cp $(Zato_Ansible_QS_Dir)/* $(Parent_Image_Dir)
 	cd $(Parent_Image_Dir)
 	DOCKER_BUILDKIT=1 docker build --no-cache -t zato-$(Zato_Version)-quickstart-parent $(Parent_Image_Dir)
@@ -33,6 +34,7 @@ parent-all:
 	$(MAKE) parent-push
 
 quickstart-build:
+	$(MAKE) copy-ansible-scripts
 	cp $(Zato_Ansible_QS_Dir)/* $(Quickstart_Image_Dir)
 	cd $(Quickstart_Image_Dir)
 	DOCKER_BUILDKIT=1 docker build --no-cache -t zato-$(Zato_Version)-quickstart $(Quickstart_Image_Dir)
