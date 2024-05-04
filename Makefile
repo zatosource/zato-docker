@@ -25,7 +25,7 @@ parent-build:
 	cd $(CURDIR)
 
 parent-push:
-	echo $(ZATO_GHCR_TOKEN) | docker login ghcr.io -u $(Zato_GitHub_Container_Repository_User) --password-stdin
+	echo $(Zato_GitHub_Token) | docker login ghcr.io -u $(Zato_GitHub_User) --password-stdin
 	docker push ghcr.io/zatosource/zato-$(Zato_Version)-quickstart-parent:latest
 	cd $(CURDIR)
 
@@ -42,12 +42,12 @@ quickstart-build:
 	cd $(CURDIR)
 
 dockerhub-push:
-	echo $(ZATO_DOCKER_HUB_TOKEN) | docker login -u $(Zato_Docker_Hub_User) --password-stdin
+	echo $(Zato_DockerHub_Token) | docker login -u $(Zato_DockerHub_User) --password-stdin
 	docker tag zato-$(Zato_Version)-quickstart zatosource/zato-$(Zato_Version)-quickstart
 	docker push zatosource/zato-$(Zato_Version)-quickstart
 
 github-push:
-	echo $(ZATO_GHCR_TOKEN) | docker login ghcr.io -u $(Zato_GitHub_Container_Repository_User) --password-stdin
+	echo $(Zato_GitHub_Token) | docker login ghcr.io -u $(Zato_GitHub_User) --password-stdin
 	docker push ghcr.io/zatosource/zato-$(Zato_Version)-quickstart:latest
 	cd $(CURDIR)
 
