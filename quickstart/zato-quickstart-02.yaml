@@ -29,11 +29,6 @@
   shell: |
     DEBIAN_FRONTEND=noninteractive service postgresql restart
 
-- name: Make sure that MySQL is started (02)
-  when: zato_use_mysql
-  shell: |
-    DEBIAN_FRONTEND=noninteractive service mysql restart
-
 - name: Make sure that Redis is started (02)
   shell: |
     DEBIAN_FRONTEND=noninteractive service redis-server restart
@@ -56,27 +51,11 @@
     force: "yes"
     name: "{{ zato_db_main }}"
 
-- name: Drop the SQL database if it exists (MySQL -> main) (02)
-  when: zato_use_mysql
-  community.mysql.mysql_db:
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-    state: absent
-    force: "yes"
-    name: "{{ zato_db_main }}"
-
 - name: Drop the SQL database if it exists (PG -> pub/sub) (02)
   when: zato_use_postgresql
   become: true
   become_user: "postgres"
   community.postgresql.postgresql_db:
-    state: absent
-    force: "yes"
-    name: "{{ zato_db_pubsub }}"
-
-- name: Drop the SQL database if it exists (MySQL -> pub/sub) (02)
-  when: zato_use_mysql
-  community.mysql.mysql_db:
-    login_unix_socket: /var/run/mysqld/mysqld.sock
     state: absent
     force: "yes"
     name: "{{ zato_db_pubsub }}"
@@ -93,14 +72,6 @@
     template: template0
     name: "{{ zato_db_main }}"
 
-- name: Create the SQL database (MySQL -> main) (02)
-  when: zato_use_mysql
-  community.mysql.mysql_db:
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-    state: present
-    force: "yes"
-    name: "{{ zato_db_main }}"
-
 - name: Create the SQL database (PG -> pub/sub) (02)
   when: zato_use_postgresql
   become: true
@@ -113,14 +84,6 @@
     template: template0
     name: "{{ zato_db_pubsub }}"
 
-- name: Create the SQL database (MySQL -> pub/sub) (02)
-  when: zato_use_mysql
-  community.mysql.mysql_db:
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-    state: present
-    force: "yes"
-    name: "{{ zato_db_pubsub }}"
-
 - name: Drop the SQL user if it exists (PG -> main) (02)
   when: zato_use_postgresql
   become: true
@@ -130,13 +93,6 @@
     fail_on_user: "no"
     name: "{{ zato_db_username_main }}"
 
-- name: Drop the SQL user if it exists (MySQL -> main) (02)
-  when: zato_use_mysql
-  community.mysql.mysql_db:
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-    state: absent
-    name: "{{ zato_db_username_main }}"
-
 - name: Drop the SQL user if it exists (PG -> pub/sub) (02)
   when: zato_use_postgresql
   become: true
@@ -144,13 +100,6 @@
   community.postgresql.postgresql_user:
     state: absent
     fail_on_user: "no"
-    name: "{{ zato_db_username_pubsub }}"
-
-- name: Drop the SQL user if it exists (MySQL -> pub/sub) (02)
-  when: zato_use_mysql
-  community.mysql.mysql_db:
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-    state: absent
     name: "{{ zato_db_username_pubsub }}"
 
 - name: Create the SQL user (PG -> main) (02)
@@ -166,15 +115,6 @@
     priv: "ALL"
     comment: "Main Zato user for PostgreSQL"
 
-- name: Create the SQL user (MySQL -> main) (02)
-  when: zato_use_mysql
-  community.mysql.mysql_user:
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-    state: present
-    name: "{{ zato_db_username_main }}"
-    password: "{{ zato_db_password_main }}"
-    priv: '*.*:ALL,GRANT'
-
 - name: Create the SQL user (PG -> pub/sub) (02)
   when: zato_use_postgresql
   become: true
@@ -187,15 +127,6 @@
     encrypted: "yes"
     priv: "ALL"
     comment: "Zato publish/subscribe user for PostgreSQL"
-
-- name: Create the SQL user (MySQL -> pub/sub) (02)
-  when: zato_use_mysql
-  community.mysql.mysql_user:
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-    state: present
-    name: "{{ zato_db_username_pubsub }}"
-    password: "{{ zato_db_password_pubsub }}"
-    priv: '*.*:ALL,GRANT'
 
 - name: Grant access to the SQL user (PG -> main) (02)
   when: zato_use_postgresql
@@ -242,11 +173,6 @@
   when: zato_use_postgresql
   shell: |
     DEBIAN_FRONTEND=noninteractive service postgresql restart
-
-- name: Restart MySQL after its configuration was changed (02)
-  when: zato_use_mysql
-  shell: |
-    DEBIAN_FRONTEND=noninteractive service mysql restart
 
 - name: Restart the SSH server after its configuration was changed (02)
   shell: |

@@ -37,14 +37,6 @@
       - apt-transport-https
       - software-properties-common
 
-- name: Install MySQL (01)
-  when: zato_use_mysql
-  apt:
-    name:
-      - mysql-server
-      - mysql-client
-      - python3-pymysql
-
 - name: Ensure the expected locales are generated (01)
   shell: |
     locale-gen en_US.UTF-8
