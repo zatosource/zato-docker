@@ -389,8 +389,6 @@
     mkdir -p /opt/hot-deploy/user-conf
     mkdir -p /opt/hot-deploy/enmasse
     chown -R zato:zato /opt/hot-deploy
-    ~/current/bin/pip install -r {{ zato_python_reqs_opt }} || true
-    ~/current/bin/pip install -r {{ zato_python_reqs_tmp }} || true
 
 - name: Prepare per-component startup scripts (02)
   become: true
