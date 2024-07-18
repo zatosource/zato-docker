@@ -89,9 +89,6 @@
       zato_db_username_main: "{{ zato_db_username_main }}"
       zato_db_password_main: "{{ zato_db_password_main }}"
 
-      zato_python_reqs_opt: "{{ zato_python_reqs_opt }}"
-      zato_python_reqs_tmp: "{{ zato_python_reqs_tmp }}"
-
   tasks:
 
     - name: Set facts (init)
