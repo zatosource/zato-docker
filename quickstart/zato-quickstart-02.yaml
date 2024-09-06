@@ -398,6 +398,7 @@
   become_user: "root"
   shell: |
     echo "{{ zato_start_preamble }}" > {{ zato_env_path }}/start-server-fg.sh
+    echo "~/current/bin/pip install --upgrade -r /opt/hot-deploy/python-reqs/requirements.txt || true" >> {{ zato_env_path }}/start-server-fg.sh
     echo "~/current/bin/zato start {{ zato_env_path }}/server1 --fg --env-file /opt/hot-deploy/enmasse/env.ini" >> {{ zato_env_path }}/start-server-fg.sh
 
     echo "{{ zato_start_preamble }}" > {{ zato_env_path }}/start-web-admin-fg.sh
