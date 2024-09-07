@@ -256,6 +256,7 @@
         --odb-user {{ zato_db_username_main }} \
         --odb-password '{{ zato_db_password_main }}' \
         --cluster-name '{{ zato_cluster_name }}' \
+        --preamble-script="{{ zato_start_preamble }}" \
         --verbose
 
 - name: Enable Redis (02)
@@ -397,8 +398,6 @@
   become: true
   become_user: "root"
   shell: |
-    sed -i '5i{{ zato_start_preamble }}' {{ zato_env_path }}/zato-qs-start.sh
-
     echo "{{ zato_start_preamble }}" > {{ zato_env_path }}/start-server-fg.sh
     echo "~/current/bin/pip install --upgrade -r /opt/hot-deploy/python-reqs/requirements.txt || true" >> {{ zato_env_path }}/start-server-fg.sh
     echo "~/current/bin/zato start {{ zato_env_path }}/server1 --fg --env-file /opt/hot-deploy/enmasse/env.ini" >> {{ zato_env_path }}/start-server-fg.sh
