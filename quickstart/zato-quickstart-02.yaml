@@ -397,7 +397,6 @@
   become: true
   become_user: "root"
   shell: |
-    echo "{{ zato_start_preamble }}" > {{ zato_env_path }}/start-server-fg.sh
     sed -i '5i{{ zato_start_preamble }}' {{ zato_env_path }}/zato-qs-start.sh
 
     echo "{{ zato_start_preamble }}" > {{ zato_env_path }}/start-server-fg.sh
