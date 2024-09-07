@@ -393,10 +393,13 @@
     ~/current/bin/pip install -r {{ zato_python_reqs_opt }} || true
     ~/current/bin/pip install -r {{ zato_python_reqs_tmp }} || true
 
-- name: Prepare per-component startup scripts (02)
+- name: Prepare startup scripts (02)
   become: true
   become_user: "root"
   shell: |
+    echo "{{ zato_start_preamble }}" > {{ zato_env_path }}/start-server-fg.sh
+    sed -i '5i{{ zato_start_preamble }}' {{ zato_env_path }}/zato-qs-start.sh
+
     echo "{{ zato_start_preamble }}" > {{ zato_env_path }}/start-server-fg.sh
     echo "~/current/bin/pip install --upgrade -r /opt/hot-deploy/python-reqs/requirements.txt || true" >> {{ zato_env_path }}/start-server-fg.sh
     echo "~/current/bin/zato start {{ zato_env_path }}/server1 --fg --env-file /opt/hot-deploy/enmasse/env.ini" >> {{ zato_env_path }}/start-server-fg.sh
